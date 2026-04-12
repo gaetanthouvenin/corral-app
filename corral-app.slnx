@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src\Corral.Domain\Corral.Domain.csproj" />
+    <File Path="src/default.ruleset" />
+    <File Path="src/Directory.Build.props" />
+    <Project Path="src\Corral.Application\Corral.Application.csproj" />
+    <Project Path="src\Corral.Infrastructure\Corral.Infrastructure.csproj" />
+    <Project Path="src\Corral.Desktop\Corral.Desktop.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests\Corral.Domain.Tests\Corral.Domain.Tests.csproj" />
+    <File Path="tests/Directory.Build.props" />
+    <Project Path="tests\Corral.Application.Tests\Corral.Application.Tests.csproj" />
+  </Folder>
+</Solution>

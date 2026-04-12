@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="Colors.xaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+  <!-- Background Brushes -->
+  <SolidColorBrush x:Key="BrushBackground" Color="{StaticResource ColorBackground}" />
+  <SolidColorBrush x:Key="BrushSurface" Color="{StaticResource ColorSurface}" />
+  <SolidColorBrush x:Key="BrushSurfaceVariant" Color="{StaticResource ColorSurfaceVariant}" />
+
+  <!-- Text Brushes -->
+  <SolidColorBrush x:Key="BrushTextPrimary" Color="{StaticResource ColorTextPrimary}" />
+  <SolidColorBrush x:Key="BrushTextSecondary" Color="{StaticResource ColorTextSecondary}" />
+  <SolidColorBrush x:Key="BrushTextTertiary" Color="{StaticResource ColorTextTertiary}" />
+
+  <!-- Border Brushes -->
+  <SolidColorBrush x:Key="BrushBorder" Color="{StaticResource ColorBorder}" />
+  <SolidColorBrush x:Key="BrushBorderLight" Color="{StaticResource ColorBorderLight}" />
+
+  <!-- Accent Brushes -->
+  <SolidColorBrush x:Key="BrushAccent" Color="{StaticResource ColorAccent}" />
+  <SolidColorBrush x:Key="BrushAccentHover" Color="{StaticResource ColorAccentHover}" />
+  <SolidColorBrush x:Key="BrushAccentActive" Color="{StaticResource ColorAccentActive}" />
+
+  <!-- Status Brushes -->
+  <SolidColorBrush x:Key="BrushSuccess" Color="{StaticResource ColorSuccess}" />
+  <SolidColorBrush x:Key="BrushWarning" Color="{StaticResource ColorWarning}" />
+  <SolidColorBrush x:Key="BrushError" Color="{StaticResource ColorError}" />
+  <SolidColorBrush x:Key="BrushInfo" Color="{StaticResource ColorInfo}" />
+
+  <!-- Zone Color Brushes -->
+  <SolidColorBrush x:Key="BrushZoneBlue" Color="{StaticResource ColorZoneBlue}" />
+  <SolidColorBrush x:Key="BrushZonePink" Color="{StaticResource ColorZonePink}" />
+  <SolidColorBrush x:Key="BrushZoneCyan" Color="{StaticResource ColorZoneCyan}" />
+  <SolidColorBrush x:Key="BrushZoneOrange" Color="{StaticResource ColorZoneOrange}" />
+  <SolidColorBrush x:Key="BrushZonePurple" Color="{StaticResource ColorZonePurple}" />
+  <SolidColorBrush x:Key="BrushZoneGray" Color="{StaticResource ColorZoneGray}" />
+
+</ResourceDictionary>

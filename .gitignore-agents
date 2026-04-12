@@ -1,0 +1,378 @@
+# AI Agent Instructions - Corral App
+# For: Claude, GitHub Copilot, Gemini, and other AI code assistants
+#
+# This document provides unified coding standards for all AI assistants
+# working on the Corral App project.
+
+## CRITICAL RULES
+
+### Rule 1: One Class Per File
+- NEVER nest classes, interfaces, or records inside other types
+- NEVER use local types or anonymous types
+- File name MUST match class name (case-sensitive)
+- ✅ GOOD: `CreateFenceCommand.cs` containing only `CreateFenceCommand` record
+- ❌ WRONG: `Commands.cs` containing multiple command records
+
+### Rule 2: Command/Query Organization
+Every Command and Query MUST be organized as:
+```
+Commands/CreateFence/
+├── CreateFenceCommand.cs          (the request record)
+├── CreateFenceCommandValidator.cs (input validation)
+└── CreateFenceCommandHandler.cs   (business logic)
+
+Queries/GetFenceById/
+├── GetFenceByIdQuery.cs           (the request record)
+└── GetFenceByIdQueryHandler.cs    (query logic)
+```
+
+### Rule 3: Layer Boundaries
+```
+Domain          (no dependencies except System)
+   ↑
+Application     (depends on Domain only)
+   ↑
+Infrastructure  (depends on Domain + Application)
+   ↑
+Presentation    (depends on Application + Infrastructure)
+```
+
+❌ NEVER: Have lower layers depend on upper layers
+❌ NEVER: Expose Domain entities in Application layer
+❌ NEVER: Expose Application DTOs in Domain layer
+
+### Rule 4: Data Transformation
+```
+EF Core Entity (FenceEntity)
+    ↓ (FenceEntityToDomainMapper)
+Domain Aggregate (Fence)
+    ↓ (FenceDomainToDtoMapper)
+Application DTO (FenceDto)
+    ↓ (FenceDtoToViewModelMapper)
+Presentation ViewModel (FenceViewModel)
+```
+
+Always map at layer boundaries. Never pass entities between layers.
+
+## File Organization
+
+### Application/Commands Structure
+```
+Application/
+├── Commands/
+│   ├── CreateFence/
+│   │   ├── CreateFenceCommand.cs
+│   │   ├── CreateFenceCommandValidator.cs
+│   │   └── CreateFenceCommandHandler.cs
+│   ├── UpdateFence/
+│   │   ├── UpdateFenceCommand.cs
+│   │   ├── UpdateFenceCommandValidator.cs
+│   │   └── UpdateFenceCommandHandler.cs
+│   ├── DeleteFence/
+│   │   ├── DeleteFenceCommand.cs
+│   │   ├── DeleteFenceCommandValidator.cs
+│   │   └── DeleteFenceCommandHandler.cs
+```
+
+### Application/Queries Structure
+```
+Queries/
+├── GetFenceById/
+│   ├── GetFenceByIdQuery.cs
+│   └── GetFenceByIdQueryHandler.cs
+├── GetAllFences/
+│   ├── GetAllFencesQuery.cs
+│   └── GetAllFencesQueryHandler.cs
+```
+
+### Infrastructure Structure
+```
+Infrastructure/
+├── Entities/
+│   └── FenceEntity.cs
+├── Mappers/
+│   └── FenceEntityToDomainMapper.cs
+├── Repositories/
+│   └── FenceRepository.cs
+├── Persistence/
+│   └── CorralDbContext.cs
+└── UnitOfWork/
+    └── UnitOfWork.cs
+```
+
+## Code Templates
+
+### Command Template
+```csharp
+using System;
+using Corral.Application.DTOs;
+using Corral.Domain.Contracts.CQRS;
+
+namespace Corral.Application.Commands.CreateFence;
+
+/// <summary>
+/// Command to create a new fence.
+/// </summary>
+/// <remarks>
+/// This command initiates the creation of a fence with specified properties.
+/// Validation ensures all parameters are within acceptable ranges.
+/// </remarks>
+public record CreateFenceCommand(
+    string Name,
+    int PositionX,
+    int PositionY,
+    int Width,
+    int Height,
+    string BackgroundColor,
+    int Opacity
+) : ICommand<FenceDto>;
+```
+
+### CommandValidator Template
+```csharp
+using FluentValidation;
+using Corral.Application.Commands.CreateFence;
+
+namespace Corral.Application.Commands.CreateFence;
+
+/// <summary>
+/// Validator for CreateFenceCommand.
+/// Ensures all command properties meet business requirements.
+/// </summary>
+public class CreateFenceCommandValidator : AbstractValidator<CreateFenceCommand>
+{
+    public CreateFenceCommandValidator()
+    {
+        RuleFor(cmd => cmd.Name)
+            .NotEmpty().WithMessage("Name is required")
+            .MaximumLength(255).WithMessage("Name must not exceed 255 characters");
+
+        RuleFor(cmd => cmd.Width)
+            .InclusiveBetween(50, 2560).WithMessage("Width must be between 50 and 2560 pixels");
+
+        RuleFor(cmd => cmd.Height)
+            .InclusiveBetween(50, 1440).WithMessage("Height must be between 50 and 1440 pixels");
+
+        RuleFor(cmd => cmd.Opacity)
+            .InclusiveBetween(0, 100).WithMessage("Opacity must be between 0 and 100");
+    }
+}
+```
+
+### CommandHandler Template
+```csharp
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Corral.Application.Commands.CreateFence;
+using Corral.Application.DTOs;
+using Corral.Application.Mappers;
+using Corral.Domain.Aggregates;
+using Corral.Domain.ValueObjects;
+using Corral.Infrastructure.UnitOfWork;
+
+namespace Corral.Application.Commands.CreateFence;
+
+/// <summary>
+/// Handler for CreateFenceCommand.
+/// Creates a new fence in the system.
+/// </summary>
+public class CreateFenceCommandHandler : IRequestHandler<CreateFenceCommand, FenceDto>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly FenceDomainToDtoMapper _mapper;
+
+    public CreateFenceCommandHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = new FenceDomainToDtoMapper();
+    }
+
+    public async Task<FenceDto> Handle(CreateFenceCommand request, CancellationToken cancellationToken)
+    {
+        // Create domain entities
+        var position = new Position(request.PositionX, request.PositionY);
+        var dimensions = new Dimensions(request.Width, request.Height);
+        var color = Color.FromHexString(request.BackgroundColor);
+        var opacity = new Opacity(request.Opacity);
+
+        // Create the aggregate root
+        var fence = Fence.Create(request.Name, position, dimensions, color, opacity);
+
+        // Persist
+        _unitOfWork.Fences.Add(fence);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Map and return
+        return _mapper.Map(fence);
+    }
+}
+```
+
+### Query Template
+```csharp
+using Corral.Application.DTOs;
+using Corral.Domain.Contracts.CQRS;
+
+namespace Corral.Application.Queries.GetFenceById;
+
+/// <summary>
+/// Query to retrieve a fence by its identifier.
+/// </summary>
+public record GetFenceByIdQuery(string FenceId) : IQuery<FenceDto?>;
+```
+
+### QueryHandler Template
+```csharp
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Corral.Application.DTOs;
+using Corral.Application.Mappers;
+using Corral.Application.Queries.GetFenceById;
+using Corral.Domain.Aggregates;
+using Corral.Infrastructure.UnitOfWork;
+
+namespace Corral.Application.Queries.GetFenceById;
+
+/// <summary>
+/// Handler for GetFenceByIdQuery.
+/// Retrieves a single fence by identifier.
+/// </summary>
+public class GetFenceByIdQueryHandler : IRequestHandler<GetFenceByIdQuery, FenceDto?>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly FenceDomainToDtoMapper _mapper;
+
+    public GetFenceByIdQueryHandler(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = new FenceDomainToDtoMapper();
+    }
+
+    public async Task<FenceDto?> Handle(GetFenceByIdQuery request, CancellationToken cancellationToken)
+    {
+        var fenceId = FenceId.Create(request.FenceId);
+        var fence = await _unitOfWork.Fences.GetByIdAsync(fenceId, cancellationToken);
+
+        return fence == null ? null : _mapper.Map(fence);
+    }
+}
+```
+
+## Naming Conventions
+
+| Item | Pattern | Example |
+|------|---------|---------|
+| Command | `[Action][Entity]Command` | `CreateFenceCommand` |
+| CommandHandler | `[Action][Entity]CommandHandler` | `CreateFenceCommandHandler` |
+| CommandValidator | `[Action][Entity]CommandValidator` | `CreateFenceCommandValidator` |
+| Query | `[Get/List][Entity][Criteria]Query` | `GetFenceByIdQuery`, `GetAllFencesQuery` |
+| QueryHandler | `[Get/List][Entity][Criteria]QueryHandler` | `GetFenceByIdQueryHandler` |
+| DTO | `[Entity]Dto` | `FenceDto` |
+| Entity (EF) | `[Entity]Entity` | `FenceEntity` |
+| Mapper | `[Source]To[Destination]Mapper` | `FenceEntityToDomainMapper` |
+| Repository | `[Entity]Repository` | `FenceRepository` |
+| Service | `I[Service]Service` (interface) | `IFenceApplicationService` |
+
+## Documentation Requirements
+
+ALL public types and members MUST have MSDN-style XML docs:
+
+```csharp
+/// <summary>
+/// One-line description (max 100 chars).
+/// </summary>
+/// <remarks>
+/// Optional: Detailed context, business rules, edge cases.
+/// </remarks>
+/// <param name="name">Parameter description</param>
+/// <returns>Return value description</returns>
+/// <exception cref="ExceptionType">When thrown and why</exception>
+/// <example>
+/// <code>
+/// var result = MyMethod("value");
+/// </code>
+/// </example>
+public void MyMethod(string name) { }
+```
+
+## DO's ✅
+
+- ✅ Create one file per class/interface/record
+- ✅ Organize by feature (Commands/CreateFence/ folder)
+- ✅ Map between layers using explicit mappers
+- ✅ Use immutable records for Commands/Queries
+- ✅ Return DTOs from Application layer
+- ✅ Keep handlers thin (logic in Domain)
+- ✅ Validate at Application layer
+- ✅ Document public APIs
+- ✅ Use proper namespaces matching folder structure
+- ✅ Include business logic in Domain Aggregates
+
+## DON'Ts ❌
+
+- ❌ Create nested classes/types
+- ❌ Use anonymous or local types
+- ❌ Mix multiple classes in one file
+- ❌ Expose Domain entities to upper layers
+- ❌ Put business logic in handlers
+- ❌ Have circular dependencies
+- ❌ Skip XML documentation
+- ❌ Use AutoMapper or reflection-based mapping
+- ❌ Have reverse layer dependencies
+- ❌ Use static classes for business logic
+
+## Project Dependencies
+
+```
+Domain
+  ^
+  |
+Application
+  ^
+  |
+Infrastructure
+  ^
+  |
+Presentation
+```
+
+Example violation: "Application should NOT reference Infrastructure directly for business logic"
+
+## Version Control
+
+Commit message format: `<type>(<scope>): <subject>`
+
+Types: feat, fix, refactor, test, docs, style, chore
+Scope: domain, application, infrastructure, presentation
+Subject: imperative, present tense, no period
+
+Example:
+```
+feat(application): Add CreateFenceCommand handler with validation
+fix(infrastructure): Correct null DateTime mapping in FenceEntity
+test(application): Add unit tests for CreateFenceCommandValidator
+refactor(domain): Extract Position validation to separate method
+```
+
+---
+
+## For AI Assistants
+
+When generating code:
+
+1. **Always check the folder structure** before creating files
+2. **Follow the naming conventions exactly**
+3. **Add complete XML documentation** to every public member
+4. **Never nest types** - if you're tempted, create a new file instead
+5. **Map at layer boundaries** - use explicit mappers
+6. **Validate in Application layer** - not in Domain or Presentation
+7. **Keep Domain pure** - business logic only, no infrastructure concerns
+8. **Test thoroughly** - write unit tests with clear names
+
+---
+
+Generated: April 12, 2026
+Framework: .NET 10.0
+Architecture: Clean Architecture + DDD + CQRS

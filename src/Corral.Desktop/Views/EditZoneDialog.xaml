@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+  x:Class="Corral.Desktop.Views.EditZoneDialog"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+  xmlns:converters="clr-namespace:Corral.Desktop.Converters"
+  xmlns:viewModels="clr-namespace:Corral.Desktop.ViewModels"
+  mc:Ignorable="d"
+  d:DataContext="{d:DesignInstance Type=viewModels:EditZoneDialogViewModel, IsDesignTimeCreatable=True}"
+  WindowStyle="None"
+  AllowsTransparency="True"
+  Background="Transparent"
+  SizeToContent="WidthAndHeight"
+  WindowStartupLocation="CenterOwner"
+  ShowInTaskbar="False"
+  Title="Edit Zone">
+
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Resources/Brushes.xaml" />
+        <ResourceDictionary Source="Resources/Styles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <converters:StringToColorConverter x:Key="StringToColorConverter" />
+    </ResourceDictionary>
+  </Window.Resources>
+
+  <!-- Loaded event to focus input -->
+  <i:Interaction.Triggers>
+    <i:EventTrigger EventName="Loaded">
+      <i:CallMethodAction TargetObject="{Binding ElementName=ZoneNameInput}" MethodName="Focus" />
+    </i:EventTrigger>
+  </i:Interaction.Triggers>
+
+  <!-- Main Dialog Content -->
+  <Border
+    Background="{StaticResource BrushSurface}"
+    CornerRadius="12"
+    Padding="32"
+    Width="500">
+
+    <StackPanel>
+
+      <!-- Title Bar -->
+      <StackPanel Margin="0,0,0,24">
+        <TextBlock
+          Text="Edit Zone"
+          FontSize="24"
+          FontWeight="Bold"
+          Foreground="{StaticResource BrushTextPrimary}"
+          Margin="0,0,0,8" />
+        <TextBlock
+          Text="Update zone properties below."
+          FontSize="13"
+          Foreground="{StaticResource BrushTextSecondary}" />
+      </StackPanel>
+
+      <!-- Zone Name Input -->
+      <StackPanel Margin="0,0,0,24">
+        <TextBlock
+          Text="Zone Name"
+          FontSize="12"
+          FontWeight="SemiBold"
+          Foreground="{StaticResource BrushTextPrimary}"
+          Margin="0,0,0,8" />
+        <Border Background="{StaticResource BrushSurfaceVariant}" CornerRadius="6" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1">
+          <TextBox
+            x:Name="ZoneNameInput"
+            Text="{Binding ZoneName, UpdateSourceTrigger=PropertyChanged}"
+            Background="Transparent"
+            Foreground="{StaticResource BrushTextPrimary}"
+            BorderThickness="0"
+            Padding="12,10"
+            Height="36"
+            FontSize="13" />
+        </Border>
+      </StackPanel>
+
+      <!-- Color Selection -->
+      <StackPanel Margin="0,0,0,24">
+        <TextBlock
+          Text="Zone Color"
+          FontSize="12"
+          FontWeight="SemiBold"
+          Foreground="{StaticResource BrushTextPrimary}"
+          Margin="0,0,0,8" />
+
+        <!-- Color Swatches -->
+        <ItemsControl ItemsSource="{Binding ColorPresets}" Margin="0,0,0,12">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border CornerRadius="6" BorderThickness="2" BorderBrush="{Binding Converter={StaticResource StringToColorConverter}}" Margin="0,0,8,0" Background="{Binding Converter={StaticResource StringToColorConverter}}">
+                <Button
+                  Command="{Binding DataContext.SelectColorCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                  CommandParameter="{Binding}"
+                  Background="Transparent"
+                  Width="40"
+                  Height="40"
+                  BorderThickness="0"
+                  Padding="0"
+                  Style="{StaticResource ButtonBase}" />
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Current Color Preview -->
+        <Border
+          Background="{Binding ColorPreview}"
+          CornerRadius="6"
+          Height="60">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock
+              Text="{Binding SelectedColor}"
+              Foreground="White"
+              FontSize="12"
+              FontWeight="Bold"
+              TextAlignment="Center" />
+          </StackPanel>
+        </Border>
+      </StackPanel>
+
+      <!-- Opacity Slider -->
+      <StackPanel Margin="0,0,0,24">
+        <Grid Margin="0,0,0,8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock
+            Grid.Column="0"
+            Text="Opacity"
+            FontSize="12"
+            FontWeight="SemiBold"
+            Foreground="{StaticResource BrushTextPrimary}" />
+          <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <TextBlock
+              Text="{Binding Opacity}"
+              FontSize="12"
+              Foreground="{StaticResource BrushTextSecondary}" />
+            <TextBlock
+              Text="%"
+              FontSize="12"
+              Foreground="{StaticResource BrushTextSecondary}"
+              Margin="2,0,0,0" />
+          </StackPanel>
+        </Grid>
+        <Slider
+          Value="{Binding Opacity, Mode=TwoWay}"
+          Minimum="0"
+          Maximum="100"
+          Height="6"
+          VerticalAlignment="Center"
+          Foreground="{StaticResource BrushAccent}" />
+      </StackPanel>
+
+      <!-- Error Message -->
+      <TextBlock
+        Text="{Binding ErrorMessage}"
+        Foreground="#FFFF6B6B"
+        FontSize="12"
+        TextWrapping="Wrap"
+        Margin="0,0,0,24"
+        Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}" />
+
+      <!-- Action Buttons -->
+      <Grid Margin="0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Button
+          Grid.Column="0"
+          Command="{Binding CancelCommand}"
+          Content="Cancel"
+          Style="{StaticResource ButtonSecondary}"
+          Height="40"
+          FontSize="13"
+          FontWeight="SemiBold"
+          Margin="0,0,8,0" />
+
+        <Button
+          Grid.Column="1"
+          Command="{Binding UpdateZoneCommand}"
+          IsEnabled="{Binding IsUpdating, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"
+          Content="Update Zone"
+          Style="{StaticResource ButtonPrimary}"
+          Height="40"
+          FontSize="13"
+          FontWeight="SemiBold" />
+      </Grid>
+
+    </StackPanel>
+  </Border>
+
+</Window>

@@ -1,0 +1,46 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    <NoWarn>$(NoWarn);NU1507</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ExcludeByFile>
+      **/Program.cs;
+      **/*Dto.cs;
+      **/*Dto.*;
+      **/*Mapping*.cs;
+      **/*.g.cs
+    </ExcludeByFile>
+
+    <Exclude>
+      [*]Microsoft.*;
+      [*]System.*
+    </Exclude>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="8.*" />
+    <PackageReference Include="coverlet.msbuild" Version="8.*" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.*" />
+    <PackageReference Include="ReportGenerator" Version="5.*" />
+    <PackageReference Include="Shouldly" Version="4.*" />
+    <PackageReference Include="xunit.v3" Version="3.*" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Moq" Version="4.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Moq" />
+    <Using Include="Shouldly" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

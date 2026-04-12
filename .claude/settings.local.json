@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet sln:*)",
+      "Bash(rm -rf src/Core/Corral.Application/CQRS)",
+      "Bash(rm -rf src/Core/Corral.Application/Common)",
+      "Bash(rm -rf src/Core/Corral.Application/Features)",
+      "Bash(rm -rf src/Core/Corral.Application/DomainEventHandlers)",
+      "Bash(rm -rf src/Core/Corral.Application/Validators)",
+      "Bash(rm -rf tests/Corral.Application.Tests/CQRS)",
+      "Bash(rm -rf tests/Corral.Application.Tests/Features)",
+      "Bash(rm -rf tests/Corral.Domain.Tests/Entities)",
+      "Bash(rm -rf tests/Corral.Domain.Tests/Specifications)",
+      "Bash(mv Core/Corral.Domain .)",
+      "Bash(mv Core/Corral.Application .)",
+      "Bash(mv Infrastructure/Corral.Infrastructure .)",
+      "Bash(mv Presentation/Corral.Desktop .)",
+      "Bash(rmdir Core Infrastructure Presentation)",
+      "WebSearch",
+      "Bash(dotnet clean:*)",
+      "Bash(dotnet run:*)",
+      "Bash(xargs grep:*)",
+      "Bash(chmod +x /tmp/refactor.sh)",
+      "Bash(/tmp/refactor.sh)",
+      "Bash(chmod +x /tmp/add_using.sh)",
+      "Bash(/tmp/add_using.sh)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet ef:*)",
+      "Bash(rm -f Corral.db)",
+      "Bash(rm -f \"src/Corral.Infrastructure/Migrations/20260412153240_InitialCreate.cs\")",
+      "Bash(rm -f \"src/Corral.Infrastructure/Migrations/20260412153240_InitialCreate.Designer.cs\")",
+      "Bash(sqlite3 Corral.db \"SELECT Id, Name, BackgroundColor, Opacity FROM Fences;\")",
+      "Bash(pkill -f \"dotnet run\")",
+      "Bash(dotnet script:*)",
+      "Bash(dotnet add:*)"
+    ]
+  }
+}

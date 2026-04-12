@@ -1,0 +1,56 @@
+<Project>
+  <PropertyGroup>
+    <Copyright>(©) $([System.DateTime]::Now.Year) Gaëtan THOUVENIN</Copyright>
+    <Authors>Gaëtan THOUVENIN</Authors>
+    <Company>Gaëtan THOUVENIN</Company>
+    <RepositoryType>git</RepositoryType>
+    <Product>Corral App</Product>
+    <Description>Virtual desktop zones manager for Windows</Description>
+    <IsTestProject>false</IsTestProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishReadyToRun>true</PublishReadyToRun>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NuGetVersion Condition=" '$(NuGetVersion)' == '' ">1.0.0</NuGetVersion>
+    <AssemblySemVer Condition=" '$(AssemblySemVer)' == '' ">1.0.0.0</AssemblySemVer>
+    <MajorMinorPatch Condition=" '$(MajorMinorPatch)' == '' ">1.0.0</MajorMinorPatch>
+    <InformationalVersion Condition=" '$(InformationalVersion)' == '' ">1.0.0</InformationalVersion>
+    <PackageVersion>$(NuGetVersion)</PackageVersion>
+    <AssemblyVersion>$(AssemblySemVer)</AssemblyVersion>
+    <FileVersion>$(MajorMinorPatch).0</FileVersion>
+    <Version>$(InformationalVersion)</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)default.ruleset</CodeAnalysisRuleSet>
+    <NuGetAuditLevel>critical</NuGetAuditLevel>
+    <NoWarn>$(NoWarn);NU1107;CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime;build;native;contentfiles;analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.14.*"
+                      PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime;build;native;contentfiles;analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Analyzers" Version="4.15.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
