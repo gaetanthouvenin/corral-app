@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using Corral.Domain.Aggregates;
 using Corral.Domain.Contracts.UnitOfWork;
 using Corral.Domain.ValueObjects;
@@ -53,7 +54,7 @@ public class UpdateFenceCommandHandler(IUnitOfWork unitOfWork)
     fence.ChangeOpacity(opacity);
 
     // Update the fence in the repository
-    unitOfWork.Fences.Update(fence);
+    await unitOfWork.Fences.UpdateAsync(fence, cancellationToken);
 
     // Persist changes
     await unitOfWork.SaveChangesAsync(cancellationToken);

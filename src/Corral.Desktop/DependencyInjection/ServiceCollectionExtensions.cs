@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using Corral.Desktop.Mappers;
 using Corral.Desktop.Services;
 using Corral.Desktop.ViewModels;
@@ -31,6 +32,9 @@ public static class ServiceCollectionExtensions
   {
     // Register services
     services.AddScoped<IDialogService, DialogService>();
+    services.AddSingleton<IOverlayService, OverlayService>();
+    services.AddSingleton<ITrayIconService, TrayIconService>();
+    services.AddSingleton<IIconService, IconService>();
 
     // Register mappers
     services.AddScoped<IMapper<Fence, FenceViewModel>, FenceToViewModelMapper>();

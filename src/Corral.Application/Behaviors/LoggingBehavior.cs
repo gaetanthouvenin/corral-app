@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using System.Diagnostics;
 
 using MediatR;
@@ -15,11 +16,16 @@ namespace Corral.Application.Behaviors;
 ///   Pipeline MediatR qui logue l'exécution de chaque command et query.
 ///   Enregistre le nom de la requête, sa durée d'exécution et les erreurs éventuelles.
 /// </summary>
-public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
-  : IPipelineBehavior<TRequest, TResponse>
+public class LoggingBehavior<TRequest, TResponse>(
+  ILogger<LoggingBehavior<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse>
   where TRequest : IBaseRequest
 {
-  public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+  #region Implementation of IPipelineBehavior<TRequest,TResponse>
+
+  public async Task<TResponse> Handle(
+    TRequest request,
+    RequestHandlerDelegate<TResponse> next,
+    CancellationToken cancellationToken)
   {
     var requestName = typeof(TRequest).Name;
 
@@ -32,7 +38,11 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
       var response = await next();
       stopwatch.Stop();
 
-      logger.LogInformation("Handled {RequestName} in {ElapsedMs}ms", requestName, stopwatch.ElapsedMilliseconds);
+      logger.LogInformation(
+        "Handled {RequestName} in {ElapsedMs}ms",
+        requestName,
+        stopwatch.ElapsedMilliseconds
+      );
 
       return response;
     }
@@ -40,9 +50,16 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
     {
       stopwatch.Stop();
 
-      logger.LogError(ex, "Error handling {RequestName} after {ElapsedMs}ms", requestName, stopwatch.ElapsedMilliseconds);
+      logger.LogError(
+        ex,
+        "Error handling {RequestName} after {ElapsedMs}ms",
+        requestName,
+        stopwatch.ElapsedMilliseconds
+      );
 
       throw;
     }
   }
+
+  #endregion
 }

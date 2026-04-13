@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using Corral.Domain.Aggregates;
 using Corral.Domain.Contracts.CQRS;
 

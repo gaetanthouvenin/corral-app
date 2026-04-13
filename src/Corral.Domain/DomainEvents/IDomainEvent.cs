@@ -6,20 +6,32 @@
 namespace Corral.Domain.DomainEvents;
 
 /// <summary>
-///   Interface de base pour tous les événements domaine
+///   Represents the base interface for all domain events.
 /// </summary>
+/// <remarks>
+///   Domain events are used to signal that something of interest has occurred within the domain.
+///   Implementing this interface allows events to carry metadata such as a unique identifier and
+///   the timestamp of when the event occurred.
+/// </remarks>
 public interface IDomainEvent
 {
   #region Properties
 
   /// <summary>
-  ///   Identifiant unique de l'événement
+  ///   Gets the unique identifier for the domain event.
   /// </summary>
+  /// <remarks>
+  ///   This identifier is used to distinguish this event instance from others,
+  ///   ensuring traceability and uniqueness across the system.
+  /// </remarks>
   string EventId { get; }
 
   /// <summary>
-  ///   Date et heure de création de l'événement
+  ///   Gets the date and time when the domain event occurred.
   /// </summary>
+  /// <value>
+  ///   A <see cref="DateTime" /> representing the moment the event was triggered.
+  /// </value>
   DateTime OccurredAt { get; }
 
   #endregion

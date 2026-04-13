@@ -59,7 +59,7 @@ public class GetActiveFencesQueryHandler(IUnitOfWork unitOfWork)
     var activeFences = await _unitOfWork.Fences.GetActivesAsync(cancellationToken);
 
     // Map each fence to DTO and return
-    return activeFences.ToList();
+    return [.. activeFences];
   }
 
   #endregion

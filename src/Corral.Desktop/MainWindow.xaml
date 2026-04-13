@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Window
   x:Class="Corral.Desktop.MainWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -14,7 +15,8 @@
   Title="Corral Manager"
   Width="1400"
   Height="900"
-  WindowStartupLocation="CenterScreen">
+  WindowStartupLocation="CenterScreen"
+  AllowDrop="True">
 
   <!-- ========================================
        BEHAVIORS - Wire up ViewModel commands
@@ -28,8 +30,10 @@
   <Window.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Resources/DataTemplates.xaml" />
-        <ResourceDictionary Source="Resources/Styles.xaml" />
+        <ResourceDictionary
+          Source="pack://application:,,,/Corral.Desktop;component/Resources/DataTemplates.xaml" />
+        <ResourceDictionary
+          Source="pack://application:,,,/Corral.Desktop;component/Resources/Styles.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Window.Resources>
@@ -43,7 +47,8 @@
     <!-- ========================================
          SIDEBAR - Navigation Panel
          ======================================== -->
-    <Border Grid.Column="0" Background="{StaticResource BrushSurfaceVariant}">
+    <Border Grid.Column="0"
+            Background="{StaticResource BrushSurfaceVariant}">
       <Grid>
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto" />
@@ -52,7 +57,8 @@
         </Grid.RowDefinitions>
 
         <!-- Logo/Brand -->
-        <StackPanel Grid.Row="0" Margin="24,32,24,32">
+        <StackPanel Grid.Row="0"
+                    Margin="24,32,24,32">
           <TextBlock
             Text="Corral"
             FontSize="18"
@@ -68,35 +74,74 @@
         <!-- Navigation -->
         <StackPanel Grid.Row="1">
           <!-- Home -->
-          <Button Style="{StaticResource ButtonNavigation}" Margin="0,2,0,2">
-            <StackPanel Orientation="Horizontal" Margin="24,4">
-              <iconPacks:PackIconMaterial Kind="Home" Margin="0,0,12,0" Width="14" Height="14" Foreground="{StaticResource BrushTextSecondary}" VerticalAlignment="Center" />
-              <TextBlock Text="Home" FontSize="13" VerticalAlignment="Center" />
+          <Button Style="{StaticResource ButtonNavigation}"
+                  Margin="0,2,0,2">
+            <StackPanel Orientation="Horizontal"
+                        Margin="24,4">
+              <iconPacks:PackIconMaterial Kind="Home"
+                                          Margin="0,0,12,0"
+                                          Width="14"
+                                          Height="14"
+                                          Foreground="{StaticResource BrushTextSecondary}"
+                                          VerticalAlignment="Center" />
+              <TextBlock Text="Home"
+                         FontSize="13"
+                         VerticalAlignment="Center" />
             </StackPanel>
           </Button>
 
           <!-- Zones (Active) -->
-          <Button Style="{StaticResource ButtonNavigation}" Background="{StaticResource BrushSurface}" Margin="0,2,0,2">
-            <StackPanel Orientation="Horizontal" Margin="24,4">
-              <iconPacks:PackIconMaterial Kind="ViewGrid" Margin="0,0,12,0" Width="14" Height="14" Foreground="{StaticResource BrushAccent}" VerticalAlignment="Center" />
-              <TextBlock Text="Zones" FontSize="13" Foreground="{StaticResource BrushAccent}" VerticalAlignment="Center" />
+          <Button Style="{StaticResource ButtonNavigation}"
+                  Background="{StaticResource BrushSurface}"
+                  Margin="0,2,0,2">
+            <StackPanel Orientation="Horizontal"
+                        Margin="24,4">
+              <iconPacks:PackIconMaterial Kind="ViewGrid"
+                                          Margin="0,0,12,0"
+                                          Width="14"
+                                          Height="14"
+                                          Foreground="{StaticResource BrushAccent}"
+                                          VerticalAlignment="Center" />
+              <TextBlock Text="Zones"
+                         FontSize="13"
+                         Foreground="{StaticResource BrushAccent}"
+                         VerticalAlignment="Center" />
             </StackPanel>
           </Button>
 
           <!-- Settings -->
-          <Button Style="{StaticResource ButtonNavigation}" Margin="0,2,0,2">
-            <StackPanel Orientation="Horizontal" Margin="24,4">
-              <iconPacks:PackIconMaterial Kind="Cog" Margin="0,0,12,0" Width="14" Height="14" Foreground="{StaticResource BrushTextSecondary}" VerticalAlignment="Center" />
-              <TextBlock Text="Settings" FontSize="13" VerticalAlignment="Center" />
+          <Button Style="{StaticResource ButtonNavigation}"
+                  Margin="0,2,0,2">
+            <StackPanel Orientation="Horizontal"
+                        Margin="24,4">
+              <iconPacks:PackIconMaterial Kind="Cog"
+                                          Margin="0,0,12,0"
+                                          Width="14"
+                                          Height="14"
+                                          Foreground="{StaticResource BrushTextSecondary}"
+                                          VerticalAlignment="Center" />
+              <TextBlock Text="Settings"
+                         FontSize="13"
+                         VerticalAlignment="Center" />
             </StackPanel>
           </Button>
         </StackPanel>
 
         <!-- Help -->
-        <Button Grid.Row="2" Style="{StaticResource ButtonNavigation}" Margin="0,0,0,24">
-          <StackPanel Orientation="Horizontal" Margin="24,4">
-            <iconPacks:PackIconMaterial Kind="HelpCircleOutline" Margin="0,0,12,0" Width="14" Height="14" Foreground="{StaticResource BrushTextSecondary}" VerticalAlignment="Center" />
-            <TextBlock Text="Help" FontSize="13" VerticalAlignment="Center" />
+        <Button Grid.Row="2"
+                Style="{StaticResource ButtonNavigation}"
+                Margin="0,0,0,24">
+          <StackPanel Orientation="Horizontal"
+                      Margin="24,4">
+            <iconPacks:PackIconMaterial Kind="HelpCircleOutline"
+                                        Margin="0,0,12,0"
+                                        Width="14"
+                                        Height="14"
+                                        Foreground="{StaticResource BrushTextSecondary}"
+                                        VerticalAlignment="Center" />
+            <TextBlock Text="Help"
+                       FontSize="13"
+                       VerticalAlignment="Center" />
           </StackPanel>
         </Button>
       </Grid>
@@ -105,53 +150,97 @@
     <!-- ========================================
          MAIN CONTENT AREA
          ======================================== -->
-    <Grid Grid.Column="1" Background="{StaticResource BrushBackground}">
+    <Grid Grid.Column="1"
+          Background="{StaticResource BrushBackground}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
       </Grid.RowDefinitions>
 
       <!-- TOP BAR (Window Controls & Search) -->
-      <Grid Grid.Row="0" Margin="0,0,0,0">
+      <Grid Grid.Row="0"
+            Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="*" />
           <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <!-- Search Bar -->
-        <Border Grid.Column="0" HorizontalAlignment="Right" Margin="0,16,24,0" Background="{StaticResource BrushSurfaceVariant}" CornerRadius="6" Height="32" Width="200" WindowChrome.IsHitTestVisibleInChrome="True">
+        <Border Grid.Column="0"
+                HorizontalAlignment="Right"
+                Margin="0,16,24,0"
+                Background="{StaticResource BrushSurfaceVariant}"
+                CornerRadius="6"
+                Height="32"
+                Width="200"
+                WindowChrome.IsHitTestVisibleInChrome="True">
           <Grid>
             <i:Interaction.Triggers>
               <i:EventTrigger EventName="KeyDown">
                 <i:InvokeCommandAction Command="{Binding SearchZonesCommand}" />
               </i:EventTrigger>
             </i:Interaction.Triggers>
-            <iconPacks:PackIconMaterial Kind="Magnify" Width="12" Height="12" Foreground="{StaticResource BrushTextTertiary}" VerticalAlignment="Center" Margin="12,0,0,0" />
-            <TextBox x:Name="SearchInput" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{StaticResource BrushTextPrimary}" BorderThickness="0" Margin="32,0,8,0" VerticalContentAlignment="Center" />
+            <iconPacks:PackIconMaterial Kind="Magnify"
+                                        Width="12"
+                                        Height="12"
+                                        Foreground="{StaticResource BrushTextTertiary}"
+                                        VerticalAlignment="Center"
+                                        Margin="12,0,0,0" />
+            <TextBox x:Name="SearchInput"
+                     Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"
+                     Background="Transparent"
+                     Foreground="{StaticResource BrushTextPrimary}"
+                     BorderThickness="0"
+                     Margin="32,0,8,0"
+                     VerticalContentAlignment="Center" />
             <!-- Placeholder Text -->
-            <TextBlock Text="SEARCH ZONES..." IsHitTestVisible="False" FontSize="11" Foreground="{StaticResource BrushTextTertiary}" VerticalAlignment="Center" Margin="34,0,0,0" />
+            <TextBlock Text="SEARCH ZONES..."
+                       IsHitTestVisible="False"
+                       FontSize="11"
+                       Foreground="{StaticResource BrushTextTertiary}"
+                       VerticalAlignment="Center"
+                       Margin="34,0,0,0" />
           </Grid>
         </Border>
 
         <!-- Window Controls -->
-        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" WindowChrome.IsHitTestVisibleInChrome="True">
-          <Button Style="{StaticResource TitleBarButtonStyle}" Click="OnMinimizeClicked">
-             <iconPacks:PackIconMaterial Kind="WindowMinimize" Width="10" Height="10" />
+        <StackPanel Grid.Column="1"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Top"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
+          <Button Style="{StaticResource TitleBarButtonStyle}"
+                  Click="OnMinimizeClicked">
+            <iconPacks:PackIconMaterial Kind="WindowMinimize"
+                                        Width="10"
+                                        Height="10" />
           </Button>
-          <Button Style="{StaticResource TitleBarButtonStyle}" Click="OnMaximizeRestoreClicked">
-             <iconPacks:PackIconMaterial Kind="WindowMaximize" Width="10" Height="10" />
+          <Button Style="{StaticResource TitleBarButtonStyle}"
+                  Click="OnMaximizeRestoreClicked">
+            <iconPacks:PackIconMaterial Kind="WindowMaximize"
+                                        Width="10"
+                                        Height="10" />
           </Button>
-          <Button Style="{StaticResource TitleBarCloseButtonStyle}" Click="OnCloseClicked">
-             <iconPacks:PackIconMaterial Kind="WindowClose" Width="10" Height="10" />
+          <Button Style="{StaticResource TitleBarCloseButtonStyle}"
+                  Click="OnCloseClicked">
+            <iconPacks:PackIconMaterial Kind="WindowClose"
+                                        Width="10"
+                                        Height="10" />
           </Button>
         </StackPanel>
       </Grid>
 
       <!-- CONTENT -->
-      <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="48,16,48,0">
+      <ScrollViewer Grid.Row="1"
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    Margin="48,16,48,0">
         <StackPanel>
           <!-- Breadcrumb & Header -->
-          <TextBlock FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource BrushTextTertiary}" Margin="0,0,0,24" Text="CORRAL MANAGER / ACTIVE ZONES" />
+          <TextBlock FontSize="10"
+                     FontWeight="SemiBold"
+                     Foreground="{StaticResource BrushTextTertiary}"
+                     Margin="0,0,0,24"
+                     Text="CORRAL MANAGER / ACTIVE ZONES" />
 
           <Grid Margin="0,0,0,48">
             <Grid.ColumnDefinitions>
@@ -160,7 +249,8 @@
             </Grid.ColumnDefinitions>
 
             <!-- Title Section -->
-            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+            <StackPanel Grid.Column="0"
+                        VerticalAlignment="Center">
               <TextBlock
                 Text="Corral Manager"
                 FontSize="32"
@@ -178,24 +268,74 @@
             </StackPanel>
 
             <!-- Create Button -->
-            <Button
-              Grid.Column="1"
-              Command="{Binding CreateNewZoneCommand}"
-              Style="{StaticResource ButtonPrimary}"
-              VerticalAlignment="Center"
-              Height="44"
-              Padding="24,0"
-              WindowChrome.IsHitTestVisibleInChrome="True">
-              <StackPanel Orientation="Horizontal">
-                <TextBlock Text="+" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
-                <TextBlock Text="Create New Zone" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" />
-              </StackPanel>
-              <Button.Resources>
-                <Style TargetType="Border">
-                  <Setter Property="CornerRadius" Value="6" />
-                </Style>
-              </Button.Resources>
-            </Button>
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+              <!-- Toggle Overlays Button -->
+              <Button
+                Command="{Binding ToggleOverlaysCommand}"
+                Style="{StaticResource ButtonPrimary}"
+                Height="44"
+                Padding="24,0"
+                Margin="0,0,12,0"
+                WindowChrome.IsHitTestVisibleInChrome="True">
+                <StackPanel Orientation="Horizontal">
+                  <iconPacks:PackIconMaterial Kind="Monitor"
+                                              Width="14"
+                                              Height="14"
+                                              Margin="0,0,8,0"
+                                              VerticalAlignment="Center" />
+                  <TextBlock FontSize="14"
+                             FontWeight="SemiBold"
+                             VerticalAlignment="Center">
+                    <TextBlock.Style>
+                      <Style TargetType="TextBlock">
+                        <Setter Property="Text"
+                                Value="Show Overlays" />
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding AreOverlaysVisible}"
+                                       Value="True">
+                            <Setter Property="Text"
+                                    Value="Hide Overlays" />
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </TextBlock.Style>
+                  </TextBlock>
+                </StackPanel>
+                <Button.Resources>
+                  <Style TargetType="Border">
+                    <Setter Property="CornerRadius"
+                            Value="6" />
+                  </Style>
+                </Button.Resources>
+              </Button>
+
+              <!-- Create New Zone Button -->
+              <Button
+                Command="{Binding CreateNewZoneCommand}"
+                Style="{StaticResource ButtonPrimary}"
+                Height="44"
+                Padding="24,0"
+                WindowChrome.IsHitTestVisibleInChrome="True">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="+"
+                             FontSize="18"
+                             Margin="0,0,8,0"
+                             VerticalAlignment="Center" />
+                  <TextBlock Text="Create New Zone"
+                             FontSize="14"
+                             FontWeight="SemiBold"
+                             VerticalAlignment="Center" />
+                </StackPanel>
+                <Button.Resources>
+                  <Style TargetType="Border">
+                    <Setter Property="CornerRadius"
+                            Value="6" />
+                  </Style>
+                </Button.Resources>
+              </Button>
+            </StackPanel>
           </Grid>
 
           <!-- Zones Grid -->

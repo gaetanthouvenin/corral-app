@@ -3,4 +3,8 @@
     <ProjectReference Include="..\..\src\Corral.Domain\Corral.Domain.csproj" />
     <ProjectReference Include="..\..\src\Corral.Application\Corral.Application.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.*" />
+  </ItemGroup>
 </Project>

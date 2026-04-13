@@ -1,0 +1,105 @@
+<Window x:Class="Corral.Desktop.Views.FenceOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Background="Transparent">
+  <Grid>
+    <!-- Main overlay area - dark themed card with colored border -->
+    <Border x:Name="OverlayBorder"
+            BorderThickness="1"
+            CornerRadius="10"
+            IsHitTestVisible="False">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Separator -->
+        <Border Grid.Row="1"
+                Height="1"
+                Background="#1AFFFFFF" />
+
+        <!-- Inner Status Header -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="16,16,16,8">
+          <Ellipse x:Name="ZoneDot"
+                   Width="8"
+                   Height="8"
+                   VerticalAlignment="Center"
+                   Margin="0,0,8,0" />
+          <TextBlock x:Name="ZoneStatusLabel"
+                     Text="ACTIVE WORKSPACE"
+                     FontSize="11"
+                     FontWeight="Bold"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+
+        <!-- Items List -->
+        <ItemsControl x:Name="ItemsPanel"
+                      Grid.Row="3"
+                      Margin="16,0,16,16">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal"
+                          Margin="0,2">
+                <Image Source="{Binding Icon}"
+                       Width="16"
+                       Height="16"
+                       VerticalAlignment="Center"
+                       Margin="0,0,6,0" />
+                <TextBlock Text="{Binding DisplayName}"
+                           FontSize="11"
+                           Foreground="#CCCCCC"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Grid>
+    </Border>
+
+    <!-- Draggable title bar (on top, hit-testable) -->
+    <Border x:Name="DragHandle"
+            VerticalAlignment="Top"
+            Height="40"
+            Background="Transparent"
+            CornerRadius="10,10,0,0"
+            Cursor="SizeAll"
+            MouseLeftButtonDown="OnDragHandleMouseDown"
+            MouseLeftButtonUp="OnDragHandleMouseUp"
+            MouseMove="OnDragHandleMouseMove">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="ZoneNameLabel"
+                   Text="ZONE NAME"
+                   FontSize="12"
+                   FontWeight="Bold"
+                   Foreground="#999999"
+                   Margin="16,0,0,0"
+                   VerticalAlignment="Center"
+                   TextOptions.TextRenderingMode="ClearType"
+                   RenderOptions.EdgeMode="Aliased" />
+        <TextBlock Grid.Column="1"
+                   Text="⠿"
+                   FontSize="14"
+                   Foreground="#66FFFFFF"
+                   Margin="0,0,16,0"
+                   VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

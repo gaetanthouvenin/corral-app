@@ -23,9 +23,7 @@ public class UpdateFenceCommandValidator : AbstractValidator<UpdateFenceCommand>
   /// </summary>
   public UpdateFenceCommandValidator()
   {
-    RuleFor(cmd => cmd.FenceId)
-      .NotEmpty()
-      .WithMessage("Fence ID is required");
+    RuleFor(cmd => cmd.FenceId).NotEmpty().WithMessage("Fence ID is required");
 
     RuleFor(cmd => cmd.Name)
       .NotEmpty()

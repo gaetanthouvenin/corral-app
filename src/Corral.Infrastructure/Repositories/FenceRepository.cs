@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using Corral.Domain.Aggregates;
 using Corral.Domain.Contracts.Mappers;
 using Corral.Domain.Contracts.Repositories;
@@ -58,7 +59,21 @@ public class FenceRepository(CorralDbContext dbContext, IMapper<FenceEntity, Fen
       Opacity = fence.Opacity.Percentage,
       IsActive = fence.IsActive,
       CreatedAt = fence.CreatedAt,
-      UpdatedAt = fence.UpdatedAt ?? DateTime.UtcNow
+      UpdatedAt = fence.UpdatedAt ?? DateTime.UtcNow,
+      Items =
+      [
+        .. fence.Items.Select(i => new FenceItemEntity
+          {
+            Id = i.Id,
+            FenceId = fence.Id.Value,
+            DisplayName = i.DisplayName,
+            Path = i.Path,
+            ItemType = (int)i.ItemType,
+            SortOrder = i.SortOrder,
+            CreatedAt = i.CreatedAt
+          }
+        )
+      ]
     };
   }
 
@@ -77,8 +92,9 @@ public class FenceRepository(CorralDbContext dbContext, IMapper<FenceEntity, Fen
   /// </remarks>
   public async Task<Fence> GetByIdAsync(FenceId id, CancellationToken cancellationToken = default)
   {
-    var entity =
-      await dbContext.Fences.FirstOrDefaultAsync(f => f.Id == id.Value, cancellationToken);
+    var entity = await dbContext.Fences.AsNoTracking()
+                                .Include(f => f.Items)
+                                .FirstOrDefaultAsync(f => f.Id == id.Value, cancellationToken);
 
     return entity == null ? null : mapper.Map(entity);
   }
@@ -93,7 +109,9 @@ public class FenceRepository(CorralDbContext dbContext, IMapper<FenceEntity, Fen
   /// </remarks>
   public async Task<List<Fence>> GetAllAsync(CancellationToken cancellationToken = default)
   {
-    var entities = await dbContext.Fences.ToListAsync(cancellationToken);
+    var entities = await dbContext.Fences.AsNoTracking()
+                                  .Include(f => f.Items)
+                                  .ToListAsync(cancellationToken);
 
     return entities.ConvertAll(e => mapper.Map(e));
   }
@@ -108,7 +126,24 @@ public class FenceRepository(CorralDbContext dbContext, IMapper<FenceEntity, Fen
   /// </remarks>
   public async Task<List<Fence>> GetActivesAsync(CancellationToken cancellationToken = default)
   {
-    var entities = await dbContext.Fences.Where(f => f.IsActive).ToListAsync(cancellationToken);
+    var entities = await dbContext.Fences.AsNoTracking()
+                                  .Include(f => f.Items)
+                                  .Where(f => f.IsActive)
+                                  .ToListAsync(cancellationToken);
+
+    return entities.ConvertAll(e => mapper.Map(e));
+  }
+
+  public async Task<List<Fence>> SearchByNameAsync(
+    string searchTerm,
+    CancellationToken cancellationToken = default)
+  {
+    var lower = searchTerm.ToLowerInvariant();
+
+    var entities = await dbContext.Fences.AsNoTracking()
+                                  .Include(f => f.Items)
+                                  .Where(f => f.Name.ToLower().Contains(lower))
+                                  .ToListAsync(cancellationToken);
 
     return entities.ConvertAll(e => mapper.Map(e));
   }
@@ -128,17 +163,71 @@ public class FenceRepository(CorralDbContext dbContext, IMapper<FenceEntity, Fen
   }
 
   /// <summary>
-  ///   Updates an existing fence.
+  ///   Updates an existing fence and synchronizes its items collection with the database.
   /// </summary>
   /// <param name="fence">The Domain fence to update.</param>
+  /// <param name="cancellationToken">The cancellation token.</param>
   /// <remarks>
-  ///   Maps the Domain Fence to a FenceEntity and marks the EF Core context as modified.
+  ///   Loads the tracked entity (with its Items) from the DbContext, then synchronizes
+  ///   scalar properties and reconciles the items collection:
+  ///   <list type="bullet">
+  ///     <item>items present in both graphs are updated in place;</item>
+  ///     <item>items present only in the domain graph are added;</item>
+  ///     <item>items present only in the database graph are removed.</item>
+  ///   </list>
+  ///   This avoids the "UPDATE … WHERE Id = &lt;new guid&gt; affected 0 rows"
+  ///   concurrency exception that occurs when calling <c>DbSet.Update</c> on a
+  ///   detached graph that contains freshly-created children with non-default keys.
   ///   Saving to the database must be performed via the Unit of Work.
   /// </remarks>
-  public void Update(Fence fence)
+  public async Task UpdateAsync(Fence fence, CancellationToken cancellationToken = default)
   {
-    var entity = MapFenceToDomainEntity(fence);
-    dbContext.Fences.Update(entity);
+    var incoming = MapFenceToDomainEntity(fence);
+
+    var existing = await dbContext.Fences
+                                  .Include(f => f.Items)
+                                  .FirstOrDefaultAsync(
+                                    f => f.Id == incoming.Id,
+                                    cancellationToken
+                                  )
+                    ?? throw new InvalidOperationException(
+                      $"Fence with ID '{incoming.Id}' not found"
+                    );
+
+    // Sync scalar properties
+    existing.Name = incoming.Name;
+    existing.PositionX = incoming.PositionX;
+    existing.PositionY = incoming.PositionY;
+    existing.Width = incoming.Width;
+    existing.Height = incoming.Height;
+    existing.BackgroundColor = incoming.BackgroundColor;
+    existing.Opacity = incoming.Opacity;
+    existing.IsActive = incoming.IsActive;
+    existing.UpdatedAt = incoming.UpdatedAt;
+
+    // Sync items collection: delete missing, add new, update kept
+    var incomingById = incoming.Items.ToDictionary(i => i.Id);
+    var existingById = existing.Items.ToDictionary(i => i.Id);
+
+    foreach (var removed in existing.Items.Where(i => !incomingById.ContainsKey(i.Id)).ToList())
+    {
+      existing.Items.Remove(removed);
+    }
+
+    foreach (var incomingItem in incoming.Items)
+    {
+      if (existingById.TryGetValue(incomingItem.Id, out var existingItem))
+      {
+        existingItem.DisplayName = incomingItem.DisplayName;
+        existingItem.Path = incomingItem.Path;
+        existingItem.ItemType = incomingItem.ItemType;
+        existingItem.SortOrder = incomingItem.SortOrder;
+      }
+      else
+      {
+        existing.Items.Add(incomingItem);
+      }
+    }
   }
 
   /// <summary>

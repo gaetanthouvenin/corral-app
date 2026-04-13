@@ -8,20 +8,20 @@ using System.Globalization;
 namespace Corral.Domain.ValueObjects;
 
 /// <summary>
-///   Représente une couleur ARGB (Alpha, Red, Green, Blue) immuable.
+///   Represents an immutable ARGB (Alpha, Red, Green, Blue) color.
 /// </summary>
 /// <remarks>
 ///   <para>
-///     Color est un Value Object immuable représentant une couleur en format ARGB (32 bits).
-///     Chaque composant (Alpha, Red, Green, Blue) est un octet (0-255).
-///     L'Alpha représente la transparence: 0 = transparent, 255 = opaque.
+///     Color is an immutable Value Object representing a color in ARGB format (32-bit).
+///     Each component (Alpha, Red, Green, Blue) is a byte (0-255).
+///     The Alpha component represents transparency: 0 = transparent, 255 = opaque.
 ///   </para>
 ///   <para>
-///     Exemples d'utilisation:
+///     Usage examples:
 ///     <code>
-/// var red = Color.Red; // Rouge opaque
-/// var customColor = Color.Create(128, 255, 0, 0); // Rouge semi-transparent
-/// var hexColor = Color.FromHexString("#FF0000FF"); // Bleu opaque
+/// var red = Color.Red; // Opaque red
+/// var customColor = Color.Create(128, 255, 0, 0); // Semi-transparent red
+/// var hexColor = Color.FromHexString("#FF0000FF"); // Opaque blue
 /// var hex = customColor.ToHexString(); // "#80FF0000"
 /// </code>
 ///   </para>
@@ -31,63 +31,63 @@ public record Color(byte A, byte R, byte G, byte B)
   #region Properties
 
   /// <summary>
-  ///   Obtient une couleur transparente (ARGB: 0, 0, 0, 0).
+  ///   Gets a transparent color (ARGB: 0, 0, 0, 0).
   /// </summary>
-  /// <value>Couleur transparent (Alpha=0).</value>
+  /// <value>Transparent color (Alpha = 0).</value>
   public static Color Transparent => new(0, 0, 0, 0);
 
   /// <summary>
-  ///   Obtient la couleur blanc opaque (ARGB: 255, 255, 255, 255).
+  ///   Gets opaque white (ARGB: 255, 255, 255, 255).
   /// </summary>
-  /// <value>Couleur blanc pur.</value>
+  /// <value>Pure white.</value>
   public static Color White => new(255, 255, 255, 255);
 
   /// <summary>
-  ///   Obtient la couleur noir opaque (ARGB: 255, 0, 0, 0).
+  ///   Gets opaque black (ARGB: 255, 0, 0, 0).
   /// </summary>
-  /// <value>Couleur noir pur.</value>
+  /// <value>Pure black.</value>
   public static Color Black => new(255, 0, 0, 0);
 
   /// <summary>
-  ///   Obtient la couleur rouge opaque (ARGB: 255, 255, 0, 0).
+  ///   Gets opaque red (ARGB: 255, 255, 0, 0).
   /// </summary>
-  /// <value>Couleur rouge pur.</value>
+  /// <value>Pure red.</value>
   public static Color Red => new(255, 255, 0, 0);
 
   /// <summary>
-  ///   Obtient la couleur vert opaque (ARGB: 255, 0, 128, 0).
+  ///   Gets opaque green (ARGB: 255, 0, 128, 0).
   /// </summary>
-  /// <value>Couleur vert standard.</value>
+  /// <value>Standard green.</value>
   public static Color Green => new(255, 0, 128, 0);
 
   /// <summary>
-  ///   Obtient la couleur bleu opaque (ARGB: 255, 0, 0, 255).
+  ///   Gets opaque blue (ARGB: 255, 0, 0, 255).
   /// </summary>
-  /// <value>Couleur bleu pur.</value>
+  /// <value>Pure blue.</value>
   public static Color Blue => new(255, 0, 0, 255);
 
   /// <summary>
-  ///   Obtient la couleur jaune opaque (ARGB: 255, 255, 255, 0).
+  ///   Gets opaque yellow (ARGB: 255, 255, 255, 0).
   /// </summary>
-  /// <value>Couleur jaune.</value>
+  /// <value>Pure yellow.</value>
   public static Color Yellow => new(255, 255, 255, 0);
 
   /// <summary>
-  ///   Obtient la couleur cyan opaque (ARGB: 255, 0, 255, 255).
+  ///   Gets opaque cyan (ARGB: 255, 0, 255, 255).
   /// </summary>
-  /// <value>Couleur cyan.</value>
+  /// <value>Pure cyan.</value>
   public static Color Cyan => new(255, 0, 255, 255);
 
   /// <summary>
-  ///   Obtient la couleur magenta opaque (ARGB: 255, 255, 0, 255).
+  ///   Gets opaque magenta (ARGB: 255, 255, 0, 255).
   /// </summary>
-  /// <value>Couleur magenta.</value>
+  /// <value>Pure magenta.</value>
   public static Color Magenta => new(255, 255, 0, 255);
 
   /// <summary>
-  ///   Obtient la couleur gris opaque (ARGB: 255, 128, 128, 128).
+  ///   Gets opaque gray (ARGB: 255, 128, 128, 128).
   /// </summary>
-  /// <value>Couleur gris moyen.</value>
+  /// <value>Medium gray.</value>
   public static Color Gray => new(255, 128, 128, 128);
 
   #endregion
@@ -95,13 +95,13 @@ public record Color(byte A, byte R, byte G, byte B)
   #region Methods
 
   /// <summary>
-  ///   Crée une nouvelle couleur avec les composants spécifiés.
+  ///   Creates a new color with the specified component values.
   /// </summary>
-  /// <param name="a">Composant Alpha (transparence): 0 (transparent) à 255 (opaque).</param>
-  /// <param name="r">Composant Red (rouge): 0 à 255.</param>
-  /// <param name="g">Composant Green (vert): 0 à 255.</param>
-  /// <param name="b">Composant Blue (bleu): 0 à 255.</param>
-  /// <returns>Une nouvelle instance de Color.</returns>
+  /// <param name="a">Alpha component (transparency): 0 (transparent) to 255 (opaque).</param>
+  /// <param name="r">Red component: 0 to 255.</param>
+  /// <param name="g">Green component: 0 to 255.</param>
+  /// <param name="b">Blue component: 0 to 255.</param>
+  /// <returns>A new <see cref="Color" /> instance with the specified ARGB values.</returns>
   /// <example>
   ///   <code>
   /// var semiTransparentRed = Color.Create(128, 255, 0, 0);
@@ -113,9 +113,11 @@ public record Color(byte A, byte R, byte G, byte B)
   }
 
   /// <summary>
-  ///   Convertit la couleur en sa représentation hexadécimale.
+  ///   Converts the color to its hexadecimal string representation.
   /// </summary>
-  /// <returns>Chaîne au format "#AARRGGBB" (ex: "#FF0000FF" pour le bleu opaque).</returns>
+  /// <returns>
+  ///   A string in <c>#AARRGGBB</c> format (e.g., <c>#FF0000FF</c> for opaque blue).
+  /// </returns>
   /// <example>
   ///   <code>
   /// var color = Color.Red;
@@ -128,11 +130,16 @@ public record Color(byte A, byte R, byte G, byte B)
   }
 
   /// <summary>
-  ///   Crée une couleur à partir d'une chaîne hexadécimale.
+  ///   Creates a color from a hexadecimal string representation.
   /// </summary>
-  /// <param name="hex">Chaîne au format "#AARRGGBB" (ex: "#FF0000FF").</param>
-  /// <returns>Une nouvelle instance de Color.</returns>
-  /// <exception cref="ArgumentException">Levée si le format n'est pas valide.</exception>
+  /// <param name="hex">
+  ///   A string in <c>#AARRGGBB</c> format (e.g., <c>#FF0000FF</c> for opaque blue).
+  /// </param>
+  /// <returns>A new <see cref="Color" /> instance parsed from the hexadecimal string.</returns>
+  /// <exception cref="ArgumentException">
+  ///   Thrown if the format is invalid. The string must be exactly 9 characters long,
+  ///   start with '#', and contain valid hexadecimal digits.
+  /// </exception>
   /// <example>
   ///   <code>
   /// var blue = Color.FromHexString("#FF0000FF");
@@ -143,7 +150,7 @@ public record Color(byte A, byte R, byte G, byte B)
   {
     if (string.IsNullOrWhiteSpace(hex) || !hex.StartsWith("#") || hex.Length != 9)
     {
-      throw new ArgumentException("Format hex invalide. Utilisez #AARRGGBB");
+      throw new ArgumentException("Invalid hex format. Use #AARRGGBB");
     }
 
     var a = byte.Parse(hex.Substring(1, 2), NumberStyles.HexNumber);

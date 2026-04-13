@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using Corral.Domain.Aggregates;
 using Corral.Domain.Contracts.UnitOfWork;
 
@@ -17,20 +18,22 @@ namespace Corral.Application.Queries.SearchFences;
 public class SearchFencesQueryHandler(IUnitOfWork unitOfWork)
   : IRequestHandler<SearchFencesQuery, List<Fence>>
 {
+  #region Implementation of IRequestHandler<SearchFencesQuery,List<Fence>>
+
   /// <summary>
   ///   Handles the search query.
   /// </summary>
   /// <param name="request">The SearchFencesQuery containing the search term.</param>
   /// <param name="cancellationToken">Token to cancel the operation.</param>
   /// <returns>A list of fences matching the search term.</returns>
-  public async Task<List<Fence>> Handle(SearchFencesQuery request, CancellationToken cancellationToken)
+  public async Task<List<Fence>> Handle(
+    SearchFencesQuery request,
+    CancellationToken cancellationToken)
   {
-    var allFences = await unitOfWork.Fences.GetAllAsync(cancellationToken);
+    var searchTerm = request.SearchTerm?.Trim() ?? string.Empty;
 
-    var searchTerm = request.SearchTerm?.ToLowerInvariant() ?? string.Empty;
-
-    return allFences
-      .Where(f => f.Name.ToLowerInvariant().Contains(searchTerm))
-      .ToList();
+    return await unitOfWork.Fences.SearchByNameAsync(searchTerm, cancellationToken);
   }
+
+  #endregion
 }

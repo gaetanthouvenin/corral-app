@@ -3,115 +3,65 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-using System.Collections.ObjectModel;
-using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Corral.Application.Commands.UpdateFence;
-using Corral.Desktop.Converters;
 
 using MediatR;
 
 namespace Corral.Desktop.ViewModels;
 
 /// <summary>
-///   ViewModel for the Edit Zone dialog.
+///   View model for the edit zone dialog window.
 /// </summary>
-public partial class EditZoneDialogViewModel(IMediator mediator) : ObservableObject
+/// <remarks>
+///   Sends an <see cref="UpdateFenceCommand" /> via MediatR on confirmation.
+///   Shared state (color presets, zone name, opacity, color preview) lives in
+///   <see cref="ZoneDialogViewModelBase" />.
+/// </remarks>
+public partial class EditZoneDialogViewModel(IMediator mediator) : ZoneDialogViewModelBase
 {
-  #region Design-time constructor
-
-  /// <summary>
-  ///   Design-time constructor for XAML preview support.
-  /// </summary>
-  public EditZoneDialogViewModel() : this(null)
-  {
-    // Populate with design-time data
-    ZoneName = "Sample Zone";
-    SelectedColor = "#FF0078D4";
-    Opacity = 85;
-    UpdateColorPreview();
-  }
-
-  #endregion
-
   #region Fields
 
-  [ObservableProperty]
-  private string _zoneName = string.Empty;
-
-  [ObservableProperty]
-  private string _selectedColor = "#FFFFFFFF";
-
-  [ObservableProperty]
-  private Color _colorPreview = Colors.White;
-
-  [ObservableProperty]
-  private int _opacity = 100;
-
-  [ObservableProperty]
-  private bool _isUpdating;
-
-  [ObservableProperty]
-  private string _errorMessage = string.Empty;
-
+  /// <summary>
+  ///   ID of the fence being edited.
+  /// </summary>
   [ObservableProperty]
   private string _fenceId = string.Empty;
 
+  /// <summary>
+  ///   Indicates whether an update operation is currently in progress.
+  /// </summary>
+  [ObservableProperty]
+  private bool _isUpdating;
+
   #endregion
 
-  #region Color Presets
+  #region Ctors
+
+  #region Design-time constructor
 
   /// <summary>
-  ///   Predefined color options for quick selection.
+  ///   Parameterless constructor for the XAML designer.
   /// </summary>
-  public ReadOnlyCollection<string> ColorPresets => new(new[]
+  public EditZoneDialogViewModel()
+    : this(null)
   {
-    "#FF0078D4", // Blue
-    "#FFFF8C00", // Orange
-    "#FF9966CC", // Purple
-    "#FF00B050", // Green
-    "#FFFF0000", // Red
-    "#FFFFFF00", // Yellow
-  });
+    FenceId = "00000000-0000-0000-0000-000000000000";
+    ZoneName = "Zone de test";
+  }
+
+  #endregion
 
   #endregion
 
   #region Methods
 
   /// <summary>
-  ///   Updates the color preview based on the selected color.
+  ///   Initializes the view model with the current fence data before opening the dialog.
   /// </summary>
-  private void UpdateColorPreview()
-  {
-    if (string.IsNullOrEmpty(SelectedColor))
-    {
-      ColorPreview = Colors.White;
-      return;
-    }
-
-    try
-    {
-      if (ColorConverter.ConvertFromString(SelectedColor) is Color color)
-      {
-        ColorPreview = color;
-      }
-    }
-    catch
-    {
-      ColorPreview = Colors.White;
-    }
-  }
-
-  /// <summary>
-  ///   Initializes the view model with fence data for editing.
-  /// </summary>
-  /// <param name="fenceId">The ID of the fence to edit.</param>
-  /// <param name="name">The current name of the fence.</param>
-  /// <param name="color">The current color in #AARRGGBB format.</param>
-  /// <param name="opacity">The current opacity (0-100).</param>
   public void Initialize(string fenceId, string name, string color, int opacity)
   {
     FenceId = fenceId;
@@ -119,7 +69,6 @@ public partial class EditZoneDialogViewModel(IMediator mediator) : ObservableObj
     SelectedColor = color;
     Opacity = opacity;
     ErrorMessage = string.Empty;
-    UpdateColorPreview();
   }
 
   #endregion
@@ -127,73 +76,51 @@ public partial class EditZoneDialogViewModel(IMediator mediator) : ObservableObj
   #region Commands
 
   /// <summary>
-  ///   Command to select a color from the preset list.
+  ///   Updates the zone with the new values and closes the dialog on success.
   /// </summary>
-  [RelayCommand]
-  public void SelectColor(string color)
+  [RelayCommand(CanExecute = nameof(CanUpdateZone))]
+#pragma warning disable VSTHRD002
+  private async Task UpdateZone()
   {
-    SelectedColor = color;
-    UpdateColorPreview();
-  }
-
-  /// <summary>
-  ///   Command to update the zone with new values.
-  /// </summary>
-  [RelayCommand]
-  public async Task UpdateZone()
-  {
-    if (string.IsNullOrEmpty(ZoneName))
-    {
-      ErrorMessage = "Zone name is required";
-      return;
-    }
-
-    if (string.IsNullOrEmpty(SelectedColor))
-    {
-      ErrorMessage = "Color is required";
-      return;
-    }
-
-    if (mediator == null)
-    {
-      ErrorMessage = "Mediator not available";
-      return;
-    }
-
     try
     {
       IsUpdating = true;
       ErrorMessage = string.Empty;
 
-      var command = new UpdateFenceCommand(FenceId, ZoneName, SelectedColor, Opacity);
+      var command = new UpdateFenceCommand(FenceId, ZoneName.Trim(), SelectedColor, Opacity);
       await mediator.Send(command);
 
       CloseDialog(true);
     }
     catch (Exception ex)
     {
-      ErrorMessage = $"Error updating zone: {ex.Message}";
+      ErrorMessage = $"Erreur lors de la modification : {ex.Message}";
+    }
+    finally
+    {
       IsUpdating = false;
     }
   }
+#pragma warning restore VSTHRD002
 
-  /// <summary>
-  ///   Command to cancel the dialog without saving.
-  /// </summary>
-  [RelayCommand]
-  public void Cancel()
+  private bool CanUpdateZone()
   {
-    CloseDialog(false);
+    return !string.IsNullOrWhiteSpace(ZoneName) && !IsUpdating;
   }
 
   #endregion
 
-  #region Dialog Result
+  #region Helpers
 
-  /// <summary>
-  ///   Callback to close the dialog and return a result.
-  /// </summary>
-  public Action<bool> CloseDialog { get; set; } = _ => { };
+  protected override void RefreshCanExecute()
+  {
+    UpdateZoneCommand.NotifyCanExecuteChanged();
+  }
+
+  partial void OnIsUpdatingChanged(bool value)
+  {
+    UpdateZoneCommand.NotifyCanExecuteChanged();
+  }
 
   #endregion
 }

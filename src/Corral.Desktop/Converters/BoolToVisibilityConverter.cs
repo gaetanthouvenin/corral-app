@@ -10,19 +10,30 @@ using System.Windows.Data;
 namespace Corral.Desktop.Converters;
 
 /// <summary>
-///   Converter qui transforme un bool en Visibility. True → Visible, False → Collapsed.
+///   Converter qui transforme un bool ou int en Visibility. True/non-zero → Visible, False/zero → Collapsed.
 ///   Passer "Invert" comme ConverterParameter pour inverser le comportement.
 /// </summary>
 [ValueConversion(typeof(bool), typeof(Visibility))]
 public class BoolToVisibilityConverter : IValueConverter
 {
+  #region Implementation of IValueConverter
+
   public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
   {
-    bool boolValue = value is bool b && b;
-    bool invert = parameter is string p && p == "Invert";
-    return (boolValue ^ invert) ? Visibility.Visible : Visibility.Collapsed;
+    var boolValue = value switch
+    {
+      bool b => b,
+      int i => i != 0,
+      _ => false
+    };
+    var invert = parameter is string p && p == "Invert";
+    return boolValue ^ invert ? Visibility.Visible : Visibility.Collapsed;
   }
 
   public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    => throw new NotSupportedException();
+  {
+    throw new NotSupportedException();
+  }
+
+  #endregion
 }

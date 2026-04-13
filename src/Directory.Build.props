@@ -4,7 +4,7 @@
     <Authors>Gaëtan THOUVENIN</Authors>
     <Company>Gaëtan THOUVENIN</Company>
     <RepositoryType>git</RepositoryType>
-    <Product>Corral App</Product>
+    <Product>Corral</Product>
     <Description>Virtual desktop zones manager for Windows</Description>
     <IsTestProject>false</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>

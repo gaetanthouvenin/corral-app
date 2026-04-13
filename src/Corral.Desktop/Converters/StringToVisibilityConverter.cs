@@ -15,13 +15,19 @@ namespace Corral.Desktop.Converters;
 [ValueConversion(typeof(string), typeof(Visibility))]
 public class StringToVisibilityConverter : IValueConverter
 {
+  #region Implementation of IValueConverter
+
   public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
   {
     return value is string str && !string.IsNullOrWhiteSpace(str)
-      ? Visibility.Visible
-      : Visibility.Collapsed;
+             ? Visibility.Visible
+             : Visibility.Collapsed;
   }
 
   public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    => throw new NotSupportedException();
+  {
+    throw new NotSupportedException();
+  }
+
+  #endregion
 }

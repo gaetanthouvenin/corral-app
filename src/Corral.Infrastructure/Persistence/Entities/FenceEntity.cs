@@ -69,5 +69,10 @@ public class FenceEntity
   /// </summary>
   public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+  /// <summary>
+  ///   Gets or sets the collection of items within this fence.
+  /// </summary>
+  public List<FenceItemEntity> Items { get; set; } = [];
+
   #endregion
 }

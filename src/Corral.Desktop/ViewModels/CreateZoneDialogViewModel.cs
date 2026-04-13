@@ -3,7 +3,6 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -15,113 +14,51 @@ using MediatR;
 namespace Corral.Desktop.ViewModels;
 
 /// <summary>
-///   ViewModel pour le dialog de création d'une nouvelle zone.
+///   View model for the create zone dialog window.
 /// </summary>
-public partial class CreateZoneDialogViewModel(IMediator mediator) : ObservableObject
+/// <remarks>
+///   Sends a <see cref="CreateFenceCommand" /> via MediatR on confirmation.
+///   Shared state (color presets, zone name, opacity, color preview) lives in
+///   <see cref="ZoneDialogViewModelBase" />.
+/// </remarks>
+public partial class CreateZoneDialogViewModel(IMediator mediator) : ZoneDialogViewModelBase
 {
-  #region Constructor
+  #region Fields
 
   /// <summary>
-  ///   Constructeur sans paramètre pour le design-time XAML.
+  ///   Indicates whether a zone creation operation is currently in progress.
   /// </summary>
-  public CreateZoneDialogViewModel() : this(null)
-  {
-    ZoneName = "Ma Nouvelle Zone";
-  }
-
-  #endregion
-
-  #region Observable Properties
-
-  /// <summary>Nom de la zone à créer.</summary>
-  [ObservableProperty]
-  [NotifyCanExecuteChangedFor(nameof(CreateZoneCommand))]
-  private string _zoneName = string.Empty;
-
-  /// <summary>Couleur sélectionnée au format #AARRGGBB.</summary>
-  [ObservableProperty]
-  private string _selectedColor = "#FF1A80E5";
-
-  /// <summary>Aperçu de la couleur sélectionnée pour la UI.</summary>
-  [ObservableProperty]
-  private SolidColorBrush _colorPreview = new(Colors.DodgerBlue);
-
-  /// <summary>Opacité de la zone (0-100).</summary>
-  [ObservableProperty]
-  private int _opacity = 100;
-
-  /// <summary>Indique si la création est en cours.</summary>
   [ObservableProperty]
   private bool _isCreating;
-
-  /// <summary>Message d'erreur à afficher si la création échoue.</summary>
-  [ObservableProperty]
-  private string _errorMessage = string.Empty;
-
-  #endregion
-
-  #region Color Presets
-
-  /// <summary>Liste des couleurs prédéfinies proposées à l'utilisateur.</summary>
-  public IReadOnlyList<ColorPreset> ColorPresets { get; } =
-  [
-    new("#FF1A80E5", "Bleu"),
-    new("#FFFF5277", "Rose"),
-    new("#FF2BD2D2", "Cyan"),
-    new("#FFFF9800", "Orange"),
-    new("#FFA15BD7", "Violet"),
-    new("#FF737373", "Gris"),
-  ];
-
-  #endregion
-
-  #region Callbacks (set by code-behind)
-
-  /// <summary>
-  ///   Callback appelé quand le dialog doit se fermer.
-  ///   Le paramètre bool indique si la création a réussi.
-  /// </summary>
-  public Action<bool> CloseDialog { get; set; }
 
   #endregion
 
   #region Commands
 
-  /// <summary>Sélectionne une couleur prédéfinie.</summary>
-  [RelayCommand]
-  private void SelectColor(string colorHex)
-  {
-    SelectedColor = colorHex;
-    UpdateColorPreview();
-  }
-
-  /// <summary>Crée la zone et ferme le dialog.</summary>
+  /// <summary>
+  ///   Creates the zone and closes the dialog on success.
+  /// </summary>
   [RelayCommand(CanExecute = nameof(CanCreateZone))]
 #pragma warning disable VSTHRD002
   private async Task CreateZone()
   {
-    if (mediator == null)
-    {
-      if (CloseDialog != null) CloseDialog(false);
-      return;
-    }
-
     try
     {
       IsCreating = true;
       ErrorMessage = string.Empty;
 
       var command = new CreateFenceCommand(
-        Name: ZoneName.Trim(),
-        PositionX: 100,
-        PositionY: 100,
-        Width: 800,
-        Height: 600,
-        BackgroundColor: SelectedColor,
-        Opacity: Opacity);
+        ZoneName.Trim(),
+        100,
+        100,
+        800,
+        600,
+        SelectedColor,
+        Opacity
+      );
 
       await mediator.Send(command);
-      if (CloseDialog != null) CloseDialog(true);
+      CloseDialog(true);
     }
     catch (Exception ex)
     {
@@ -134,40 +71,50 @@ public partial class CreateZoneDialogViewModel(IMediator mediator) : ObservableO
   }
 #pragma warning restore VSTHRD002
 
-  private bool CanCreateZone() => !string.IsNullOrWhiteSpace(ZoneName) && !IsCreating;
-
-  /// <summary>Annule et ferme le dialog.</summary>
-  [RelayCommand]
-  private void Cancel()
+  /// <summary>
+  ///   Determines whether the zone can be created based on the current state.
+  /// </summary>
+  /// <returns>
+  ///   <c>true</c> if the zone name is not null, not empty, and not whitespace,
+  ///   and the creation process is not currently in progress; otherwise, <c>false</c>.
+  /// </returns>
+  /// <remarks>
+  ///   This method is used as the <c>CanExecute</c> condition for the <see cref="CreateZoneCommand" />.
+  /// </remarks>
+  private bool CanCreateZone()
   {
-    if (CloseDialog != null) CloseDialog(false);
+    return !string.IsNullOrWhiteSpace(ZoneName) && !IsCreating;
   }
 
   #endregion
 
   #region Helpers
 
-  partial void OnSelectedColorChanged(string value) => UpdateColorPreview();
-
-  private void UpdateColorPreview()
+  /// <summary>
+  ///   Notifies the associated command to reevaluate its ability to execute.
+  /// </summary>
+  /// <remarks>
+  ///   This method overrides <see cref="ZoneDialogViewModelBase.RefreshCanExecute" />
+  ///   to ensure that the <see cref="CreateZoneCommand" /> updates its execution state
+  ///   based on the current conditions.
+  /// </remarks>
+  protected override void RefreshCanExecute()
   {
-    try
-    {
-      var color = (Color)ColorConverter.ConvertFromString(SelectedColor);
-      ColorPreview = new SolidColorBrush(color);
-    }
-    catch
-    {
-      ColorPreview = new SolidColorBrush(Colors.Gray);
-    }
+    CreateZoneCommand.NotifyCanExecuteChanged();
+  }
+
+  /// <summary>
+  ///   Handles changes to the <see cref="_isCreating" /> property.
+  /// </summary>
+  /// <param name="value">The new value of the <see cref="_isCreating" /> property.</param>
+  /// <remarks>
+  ///   This method is invoked whenever the <see cref="_isCreating" /> property changes.
+  ///   It ensures that the state of the <see cref="CreateZoneCommand" /> is updated accordingly.
+  /// </remarks>
+  partial void OnIsCreatingChanged(bool value)
+  {
+    CreateZoneCommand.NotifyCanExecuteChanged();
   }
 
   #endregion
 }
-
-/// <summary>
-///   Représente une couleur prédéfinie avec son code hex et son label.
-/// </summary>
-/// <param name="Hex">Code couleur au format #AARRGGBB.</param>
-/// <param name="Label">Nom lisible de la couleur.</param>
-public record ColorPreset(string Hex, string Label);

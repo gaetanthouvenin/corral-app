@@ -3,6 +3,9 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
+using System.Windows.Input;
+
 using Corral.Desktop.ViewModels;
 
 namespace Corral.Desktop.Views;
@@ -12,6 +15,8 @@ namespace Corral.Desktop.Views;
 /// </summary>
 public partial class EditZoneDialog
 {
+  #region Ctors
+
   /// <summary>
   ///   Initializes a new instance of the EditZoneDialog class.
   /// </summary>
@@ -23,20 +28,28 @@ public partial class EditZoneDialog
 
     // Wire up the close dialog callback
     viewModel.CloseDialog = result =>
-    {
-      DialogResult = result;
-      Close();
-    };
+                            {
+                              DialogResult = result;
+                              Close();
+                            };
+
+    MouseLeftButtonDown += OnTitleBarMouseDown;
   }
+
+  #endregion
+
+  #region Methods
 
   /// <summary>
   ///   Handles title bar mouse down to enable window dragging.
   /// </summary>
-  private void OnTitleBarMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+  private void OnTitleBarMouseDown(object sender, MouseButtonEventArgs e)
   {
-    if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+    if (e.LeftButton == MouseButtonState.Pressed)
     {
       DragMove();
     }
   }
+
+  #endregion
 }

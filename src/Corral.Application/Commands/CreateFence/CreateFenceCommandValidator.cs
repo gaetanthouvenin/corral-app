@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------------------------------------
-// <copyright file="CreateFenceCommandValidator.cs" company="Ga�tan THOUVENIN">
-//   Copyright (c) Ga�tan THOUVENIN. All rights reserved.
+// <copyright file="CreateFenceCommandValidator.cs" company="Gaëtan THOUVENIN">
+//   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
 using FluentValidation;

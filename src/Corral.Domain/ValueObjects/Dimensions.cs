@@ -6,17 +6,16 @@
 namespace Corral.Domain.ValueObjects;
 
 /// <summary>
-///   Représente les dimensions (largeur x hauteur) d'une zone de Fence en pixels.
+///   Represents the dimensions (width × height) of a Fence zone in pixels.
 /// </summary>
 /// <remarks>
 ///   <para>
-///     Dimensions est un Value Object immuable qui encapsule les contraintes de taille
-///     pour les zones virtuelles (Fences). Les dimensions doivent être comprises dans les limites
-///     autorisées
-///     définie par les constantes MinWidth, MinHeight, MaxWidth et MaxHeight.
+///     Dimensions is an immutable Value Object that encapsulates size constraints
+///     for virtual zones (Fences). Dimensions must fall within the allowed limits
+///     defined by the MinWidth, MinHeight, MaxWidth, and MaxHeight constants.
 ///   </para>
 ///   <para>
-///     Exemples d'utilisation:
+///     Usage examples:
 ///     <code>
 /// var defaultSize = Dimensions.Default; // 200x200
 /// var customSize = Dimensions.Create(400, 300);
@@ -30,27 +29,27 @@ public record Dimensions(int Width, int Height)
   #region Fields
 
   /// <summary>
-  ///   La largeur minimale autorisée pour une zone (en pixels).
+  ///   The minimum allowed width for a zone in pixels.
   /// </summary>
   /// <value>50 pixels.</value>
   public const int MinWidth = 50;
 
   /// <summary>
-  ///   La hauteur minimale autorisée pour une zone (en pixels).
+  ///   The minimum allowed height for a zone in pixels.
   /// </summary>
   /// <value>50 pixels.</value>
   public const int MinHeight = 50;
 
   /// <summary>
-  ///   La largeur maximale autorisée pour une zone (en pixels).
+  ///   The maximum allowed width for a zone in pixels.
   /// </summary>
-  /// <value>2560 pixels (résolution 4K).</value>
+  /// <value>2560 pixels (4K resolution).</value>
   public const int MaxWidth = 2560;
 
   /// <summary>
-  ///   La hauteur maximale autorisée pour une zone (en pixels).
+  ///   The maximum allowed height for a zone in pixels.
   /// </summary>
-  /// <value>1440 pixels (résolution 2K).</value>
+  /// <value>1440 pixels (2K resolution).</value>
   public const int MaxHeight = 1440;
 
   #endregion
@@ -58,15 +57,15 @@ public record Dimensions(int Width, int Height)
   #region Properties
 
   /// <summary>
-  ///   Obtient les dimensions par défaut (200x200 pixels).
+  ///   Gets the default dimensions (200×200 pixels).
   /// </summary>
-  /// <value>Une instance de Dimensions avec Width=200 et Height=200.</value>
+  /// <value>A <see cref="Dimensions" /> instance with Width = 200 and Height = 200.</value>
   public static Dimensions Default => new(200, 200);
 
   /// <summary>
-  ///   Calcule l'aire de la zone en pixels carrés.
+  ///   Calculates the area of the zone in square pixels.
   /// </summary>
-  /// <value>L'aire égale à Width × Height.</value>
+  /// <value>The area equal to Width × Height.</value>
   /// <example>
   ///   <code>
   /// var size = Dimensions.Create(400, 300);
@@ -80,54 +79,61 @@ public record Dimensions(int Width, int Height)
   #region Methods
 
   /// <summary>
-  ///   Crée de nouvelles dimensions avec validation des contraintes.
+  ///   Creates new dimensions with constraint validation.
   /// </summary>
-  /// <param name="width">Largeur en pixels. Doit être entre MinWidth et MaxWidth.</param>
-  /// <param name="height">Hauteur en pixels. Doit être entre MinHeight et MaxHeight.</param>
-  /// <returns>Une nouvelle instance de Dimensions.</returns>
+  /// <param name="width">
+  ///   Width in pixels. Must be between <see cref="MinWidth" /> and
+  ///   <see cref="MaxWidth" />.
+  /// </param>
+  /// <param name="height">
+  ///   Height in pixels. Must be between <see cref="MinHeight" /> and
+  ///   <see cref="MaxHeight" />.
+  /// </param>
+  /// <returns>A new <see cref="Dimensions" /> instance.</returns>
   /// <exception cref="InvalidOperationException">
-  ///   Levée si les dimensions ne respectent pas les
-  ///   contraintes.
+  ///   Thrown if the dimensions do not meet the constraints.
   /// </exception>
   /// <example>
   ///   <code>
-  /// var size = Dimensions.Create(400, 300); // Valide
-  /// var invalid = Dimensions.Create(30, 40); // Lève InvalidOperationException
+  /// var size = Dimensions.Create(400, 300); // Valid
+  /// var invalid = Dimensions.Create(30, 40); // Throws InvalidOperationException
   /// </code>
   /// </example>
   public static Dimensions Create(int width, int height)
   {
     if (width < MinWidth)
     {
-      throw new InvalidOperationException($"Width doit être >= {MinWidth}");
+      throw new InvalidOperationException($"Width must be >= {MinWidth}");
     }
 
     if (height < MinHeight)
     {
-      throw new InvalidOperationException($"Height doit être >= {MinHeight}");
+      throw new InvalidOperationException($"Height must be >= {MinHeight}");
     }
 
     if (width > MaxWidth)
     {
-      throw new InvalidOperationException($"Width doit être <= {MaxWidth}");
+      throw new InvalidOperationException($"Width must be <= {MaxWidth}");
     }
 
     if (height > MaxHeight)
     {
-      throw new InvalidOperationException($"Height doit être <= {MaxHeight}");
+      throw new InvalidOperationException($"Height must be <= {MaxHeight}");
     }
 
     return new Dimensions(width, height);
   }
 
   /// <summary>
-  ///   Détermine si une position donnée se trouve à l'intérieur des limites de cette zone.
+  ///   Determines whether a given position is contained within the bounds of this zone.
   /// </summary>
-  /// <param name="position">La position à tester.</param>
-  /// <returns>true si (0 ≤ position.X &lt; Width) et (0 ≤ position.Y &lt; Height); sinon, false.</returns>
+  /// <param name="position">The position to test.</param>
+  /// <returns>
+  ///   <c>true</c> if (0 ≤ position.X &lt; Width) and (0 ≤ position.Y &lt; Height); otherwise,
+  ///   <c>false</c>.
+  /// </returns>
   /// <remarks>
-  ///   La vérification utilise des bornes inclusives pour X et Y (minimum) et exclusives
-  ///   (maximum).
+  ///   The check uses inclusive bounds for X and Y (minimum) and exclusive bounds (maximum).
   /// </remarks>
   /// <example>
   ///   <code>

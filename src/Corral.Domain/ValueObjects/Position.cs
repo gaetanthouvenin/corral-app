@@ -6,15 +6,15 @@
 namespace Corral.Domain.ValueObjects;
 
 /// <summary>
-///   Représente une position (X, Y) sur l'écran en coordonnées pixels.
+///   Represents a position (X, Y) on the screen in pixel coordinates.
 /// </summary>
 /// <remarks>
 ///   <para>
-///     Position est un Value Object immuable représentant un point 2D sur le plan de l'écran.
-///     Les coordonnées X et Y sont exprimées en pixels et doivent être positives ou nulles.
+///     Position is an immutable Value Object representing a point in 2D space on the screen.
+///     The X and Y coordinates are expressed in pixels and must be non-negative.
 ///   </para>
 ///   <para>
-///     Exemples d'utilisation:
+///     Usage examples:
 ///     <code>
 /// var origin = Position.Origin; // (0, 0)
 /// var point = Position.Create(100, 200);
@@ -27,9 +27,9 @@ public record Position(int X, int Y)
   #region Properties
 
   /// <summary>
-  ///   Obtient la position à l'origine (0, 0).
+  ///   Gets the position at the origin (0, 0).
   /// </summary>
-  /// <value>Une instance de Position avec X=0 et Y=0.</value>
+  /// <value>A <see cref="Position" /> instance with X = 0 and Y = 0.</value>
   public static Position Origin => new(0, 0);
 
   #endregion
@@ -37,12 +37,14 @@ public record Position(int X, int Y)
   #region Methods
 
   /// <summary>
-  ///   Crée une nouvelle instance de Position avec validation.
+  ///   Creates a new position instance with validation.
   /// </summary>
-  /// <param name="x">La coordonnée X en pixels. Doit être >= 0.</param>
-  /// <param name="y">La coordonnée Y en pixels. Doit être >= 0.</param>
-  /// <returns>Une nouvelle instance de Position.</returns>
-  /// <exception cref="InvalidOperationException">Levée si X ou Y est négatif.</exception>
+  /// <param name="x">The X coordinate in pixels. Must be >= 0.</param>
+  /// <param name="y">The Y coordinate in pixels. Must be >= 0.</param>
+  /// <returns>A new <see cref="Position" /> instance.</returns>
+  /// <exception cref="InvalidOperationException">
+  ///   Thrown if X or Y is negative.
+  /// </exception>
   /// <example>
   ///   <code>
   /// var position = Position.Create(150, 250);
@@ -52,22 +54,22 @@ public record Position(int X, int Y)
   {
     if (x < 0)
     {
-      throw new InvalidOperationException("X doit être positif ou zéro");
+      throw new InvalidOperationException("X must be non-negative");
     }
 
     if (y < 0)
     {
-      throw new InvalidOperationException("Y doit être positif ou zéro");
+      throw new InvalidOperationException("Y must be non-negative");
     }
 
     return new Position(x, y);
   }
 
   /// <summary>
-  ///   Calcule la distance euclidienne entre cette position et une autre.
+  ///   Calculates the Euclidean distance between this position and another.
   /// </summary>
-  /// <param name="other">L'autre position.</param>
-  /// <returns>La distance en pixels entre les deux positions.</returns>
+  /// <param name="other">The other position.</param>
+  /// <returns>The distance in pixels between the two positions.</returns>
   /// <example>
   ///   <code>
   /// var pos1 = Position.Create(0, 0);

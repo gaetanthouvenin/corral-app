@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------------------------------------
-// <copyright file="IUnitOfWork.cs" company="Gaëtan THOUVENIN">
-//   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
+// <copyright file="IUnitOfWork.cs" company="GaÃ«tan THOUVENIN">
+//   Copyright (c) GaÃ«tan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
 using Corral.Domain.Contracts.Repositories;

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Window
   x:Class="Corral.Desktop.Views.CreateZoneDialog"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -20,89 +21,6 @@
   AllowsTransparency="True"
   Background="Transparent">
 
-  <Window.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../Resources/Brushes.xaml" />
-        <ResourceDictionary Source="../Resources/Styles.xaml" />
-      </ResourceDictionary.MergedDictionaries>
-
-      <!-- Converters -->
-      <converters:StringToColorConverter x:Key="StringToColorConverter" />
-      <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
-      <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-
-      <!-- Input Field Style -->
-      <Style x:Key="InputField" TargetType="TextBox">
-        <Setter Property="Background" Value="{StaticResource BrushSurfaceVariant}" />
-        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="12,10" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="CaretBrush" Value="{StaticResource BrushTextPrimary}" />
-        <Setter Property="Template">
-          <Setter.Value>
-            <ControlTemplate TargetType="TextBox">
-              <Border
-                Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}"
-                CornerRadius="6">
-                <ScrollViewer x:Name="PART_ContentHost"
-                              Margin="{TemplateBinding Padding}"
-                              VerticalAlignment="Center" />
-              </Border>
-              <ControlTemplate.Triggers>
-                <Trigger Property="IsFocused" Value="True">
-                  <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}" />
-                </Trigger>
-              </ControlTemplate.Triggers>
-            </ControlTemplate>
-          </Setter.Value>
-        </Setter>
-      </Style>
-
-      <!-- Label Style -->
-      <Style x:Key="FieldLabel" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{StaticResource BrushTextSecondary}" />
-        <Setter Property="FontSize" Value="11" />
-        <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Margin" Value="0,0,0,6" />
-      </Style>
-
-      <!-- Color Swatch Button -->
-      <Style x:Key="ColorSwatchButton" TargetType="Button">
-        <Setter Property="Width" Value="36" />
-        <Setter Property="Height" Value="36" />
-        <Setter Property="Margin" Value="0,0,8,0" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="Template">
-          <Setter.Value>
-            <ControlTemplate TargetType="Button">
-              <Border
-                Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}"
-                CornerRadius="8">
-              </Border>
-              <ControlTemplate.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                  <Setter Property="BorderBrush" Value="White" />
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                  <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}" />
-                </Trigger>
-              </ControlTemplate.Triggers>
-            </ControlTemplate>
-          </Setter.Value>
-        </Setter>
-      </Style>
-    </ResourceDictionary>
-  </Window.Resources>
-
   <!-- Dialog Container with drop shadow -->
   <Border
     Margin="16"
@@ -123,8 +41,8 @@
            TITLE BAR
            ======================== -->
       <Border Grid.Row="0"
-        Background="{StaticResource BrushSurfaceVariant}"
-        CornerRadius="12,12,0,0">
+              Background="{StaticResource BrushSurfaceVariant}"
+              CornerRadius="12,12,0,0">
         <Grid Margin="20,0,12,0">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -133,14 +51,15 @@
 
           <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
             <iconPacks:PackIconMaterial Kind="PlusCircleOutline" Width="18" Height="18"
-              Foreground="{StaticResource BrushAccent}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                        Foreground="{StaticResource BrushAccent}"
+                                        VerticalAlignment="Center" Margin="0,0,10,0" />
             <TextBlock Text="Nouvelle Zone" FontSize="15" FontWeight="SemiBold"
-              Foreground="{StaticResource BrushTextPrimary}" VerticalAlignment="Center" />
+                       Foreground="{StaticResource BrushTextPrimary}" VerticalAlignment="Center" />
           </StackPanel>
 
           <Button Grid.Column="1" Command="{Binding CancelCommand}"
-            Width="32" Height="32" Cursor="Hand"
-            Background="Transparent" BorderThickness="0">
+                  Width="32" Height="32" Cursor="Hand"
+                  Background="Transparent" BorderThickness="0">
             <Button.Template>
               <ControlTemplate TargetType="Button">
                 <Border Background="{TemplateBinding Background}" CornerRadius="6">
@@ -154,7 +73,7 @@
               </ControlTemplate>
             </Button.Template>
             <iconPacks:PackIconMaterial Kind="Close" Width="14" Height="14"
-              Foreground="{StaticResource BrushTextSecondary}" />
+                                        Foreground="{StaticResource BrushTextSecondary}" />
           </Button>
         </Grid>
       </Border>
@@ -196,7 +115,7 @@
 
         <!-- Color Preview Bar -->
         <Border Height="36" CornerRadius="6" Margin="0,0,0,20"
-          Background="{Binding ColorPreview}">
+                Background="{Binding ColorPreview}">
           <TextBlock
             Text="{Binding SelectedColor}"
             FontFamily="Consolas" FontSize="12"
@@ -220,12 +139,12 @@
             Margin="0,0,12,0" />
 
           <Border Grid.Column="1"
-            Background="{StaticResource BrushSurfaceVariant}"
-            BorderBrush="{StaticResource BrushBorder}"
-            BorderThickness="1"
-            CornerRadius="4">
+                  Background="{StaticResource BrushSurfaceVariant}"
+                  BorderBrush="{StaticResource BrushBorder}"
+                  BorderThickness="1"
+                  CornerRadius="4">
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-              Foreground="{StaticResource BrushTextPrimary}" FontSize="13">
+                       Foreground="{StaticResource BrushTextPrimary}" FontSize="13">
               <Run Text="{Binding Opacity}" /><Run Text="%" />
             </TextBlock>
           </Border>
@@ -245,9 +164,9 @@
            ACTION BUTTONS
            ======================== -->
       <Border Grid.Row="2"
-        BorderBrush="{StaticResource BrushBorder}"
-        BorderThickness="0,1,0,0"
-        CornerRadius="0,0,12,12">
+              BorderBrush="{StaticResource BrushBorder}"
+              BorderThickness="0,1,0,0"
+              CornerRadius="0,0,12,12">
         <Grid Margin="24,0">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -257,26 +176,26 @@
 
           <!-- Loading indicator -->
           <TextBlock Grid.Column="0"
-            Text="Création en cours..."
-            FontSize="12"
-            Foreground="{StaticResource BrushTextSecondary}"
-            VerticalAlignment="Center"
-            Visibility="{Binding IsCreating, Converter={StaticResource BoolToVisibilityConverter}}" />
+                     Text="Création en cours..."
+                     FontSize="12"
+                     Foreground="{StaticResource BrushTextSecondary}"
+                     VerticalAlignment="Center"
+                     Visibility="{Binding IsCreating, Converter={StaticResource BoolToVisibilityConverter}}" />
 
           <!-- Cancel Button -->
           <Button Grid.Column="1"
-            Content="Annuler"
-            Command="{Binding CancelCommand}"
-            Style="{StaticResource ButtonSecondary}"
-            Margin="0,0,8,0" />
+                  Content="Annuler"
+                  Command="{Binding CancelCommand}"
+                  Style="{StaticResource ButtonSecondary}"
+                  Margin="0,0,8,0" />
 
           <!-- Create Button -->
           <Button Grid.Column="2"
-            Command="{Binding CreateZoneCommand}"
-            Style="{StaticResource ButtonPrimary}">
+                  Command="{Binding CreateZoneCommand}"
+                  Style="{StaticResource ButtonPrimary}">
             <StackPanel Orientation="Horizontal">
               <iconPacks:PackIconMaterial Kind="Plus" Width="14" Height="14"
-                VerticalAlignment="Center" Margin="0,0,6,0" />
+                                          VerticalAlignment="Center" Margin="0,0,6,0" />
               <TextBlock Text="Créer la zone" VerticalAlignment="Center" />
             </StackPanel>
           </Button>

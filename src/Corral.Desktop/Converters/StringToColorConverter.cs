@@ -3,9 +3,13 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
+
+using Color = System.Windows.Media.Color;
+using ColorConverter = System.Windows.Media.ColorConverter;
 
 namespace Corral.Desktop.Converters;
 
@@ -14,6 +18,8 @@ namespace Corral.Desktop.Converters;
 /// </summary>
 public class StringToColorConverter : IValueConverter
 {
+  #region Implementation of IValueConverter
+
   /// <summary>
   ///   Converts a hex color string (e.g., "#FF0000" or "FF0000") to a SolidColorBrush.
   /// </summary>
@@ -46,4 +52,6 @@ public class StringToColorConverter : IValueConverter
   {
     throw new NotSupportedException();
   }
+
+  #endregion
 }

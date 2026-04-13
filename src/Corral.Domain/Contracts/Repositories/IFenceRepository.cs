@@ -42,6 +42,16 @@ public interface IFenceRepository
   Task<List<Fence>> GetActivesAsync(CancellationToken cancellationToken = default);
 
   /// <summary>
+  ///   Searches fences by name using a case-insensitive substring match, server-side.
+  /// </summary>
+  /// <param name="searchTerm">The term to search for in fence names.</param>
+  /// <param name="cancellationToken">The cancellation token.</param>
+  /// <returns>A list of fences whose name contains the search term.</returns>
+  Task<List<Fence>> SearchByNameAsync(
+    string searchTerm,
+    CancellationToken cancellationToken = default);
+
+  /// <summary>
   ///   Adds a new fence to the repository.
   /// </summary>
   /// <param name="fence">The fence to add.</param>
@@ -52,14 +62,16 @@ public interface IFenceRepository
   void Add(Fence fence);
 
   /// <summary>
-  ///   Updates an existing fence.
+  ///   Updates an existing fence, including its items collection.
   /// </summary>
   /// <param name="fence">The fence to update.</param>
+  /// <param name="cancellationToken">The cancellation token.</param>
   /// <remarks>
-  ///   This method does not immediately persist the changes to the database.
-  ///   Persistence is handled via the Unit of Work.
+  ///   Loads the tracked entity from the database and synchronizes scalar properties
+  ///   and the items collection (insertions, updates, deletions). The actual SQL
+  ///   is emitted when the Unit of Work calls <c>SaveChangesAsync</c>.
   /// </remarks>
-  void Update(Fence fence);
+  Task UpdateAsync(Fence fence, CancellationToken cancellationToken = default);
 
   /// <summary>
   ///   Deletes a fence from the repository.

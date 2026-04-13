@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using Corral.Domain.Aggregates;
 using Corral.Domain.Contracts.CQRS;
 
@@ -22,8 +23,5 @@ namespace Corral.Application.Commands.UpdateFence;
 /// <param name="Name">The new name for the fence.</param>
 /// <param name="BackgroundColor">The new background color in hexadecimal format.</param>
 /// <param name="Opacity">The new opacity percentage.</param>
-public record UpdateFenceCommand(
-  string FenceId,
-  string Name,
-  string BackgroundColor,
-  int Opacity) : ICommand<Fence>, IRequest<Fence>;
+public record UpdateFenceCommand(string FenceId, string Name, string BackgroundColor, int Opacity)
+  : ICommand<Fence>, IRequest<Fence>;

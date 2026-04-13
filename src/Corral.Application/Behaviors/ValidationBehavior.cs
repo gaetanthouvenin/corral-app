@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using FluentValidation;
 
 using MediatR;
@@ -17,33 +18,44 @@ namespace Corral.Application.Behaviors;
 /// </summary>
 public class ValidationBehavior<TRequest, TResponse>(
   IEnumerable<IValidator<TRequest>> validators,
-  ILogger<ValidationBehavior<TRequest, TResponse>> logger)
-  : IPipelineBehavior<TRequest, TResponse>
+  ILogger<ValidationBehavior<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse>
   where TRequest : IBaseRequest
 {
-  public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+  #region Implementation of IPipelineBehavior<TRequest,TResponse>
+
+  public async Task<TResponse> Handle(
+    TRequest request,
+    RequestHandlerDelegate<TResponse> next,
+    CancellationToken cancellationToken)
   {
     if (!validators.Any())
+    {
       return await next();
+    }
 
     var requestName = typeof(TRequest).Name;
 
     var context = new ValidationContext<TRequest>(request);
 
-    var failures = validators
-      .Select(v => v.Validate(context))
-      .SelectMany(result => result.Errors)
-      .Where(f => f != null)
-      .ToList();
+    var failures = validators.Select(v => v.Validate(context))
+                             .SelectMany(result => result.Errors)
+                             .Where(f => f != null)
+                             .ToList();
 
     if (failures.Count == 0)
+    {
       return await next();
+    }
 
-    logger.LogWarning("Validation failed for {RequestName} with {ErrorCount} error(s): {Errors}",
+    logger.LogWarning(
+      "Validation failed for {RequestName} with {ErrorCount} error(s): {Errors}",
       requestName,
       failures.Count,
-      string.Join("; ", failures.Select(f => f.ErrorMessage)));
+      string.Join("; ", failures.Select(f => f.ErrorMessage))
+    );
 
     throw new ValidationException(failures);
   }
+
+  #endregion
 }

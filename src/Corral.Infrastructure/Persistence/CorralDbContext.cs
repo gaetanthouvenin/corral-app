@@ -24,6 +24,11 @@ public class CorralDbContext(DbContextOptions<CorralDbContext> options) : DbCont
   /// </summary>
   public DbSet<FenceEntity> Fences { get; set; }
 
+  /// <summary>
+  ///   Gets or sets the DbSet for FenceItem entities in the database.
+  /// </summary>
+  public DbSet<FenceItemEntity> FenceItems { get; set; }
+
   #endregion
 
   #region Methods
@@ -41,37 +46,71 @@ public class CorralDbContext(DbContextOptions<CorralDbContext> options) : DbCont
 
     // Configure Fence entity
     modelBuilder.Entity<FenceEntity>(entity =>
-    {
-      entity.HasKey(f => f.Id);
+                                     {
+                                       entity.HasKey(f => f.Id);
 
-      entity.Property(f => f.Id)
-        .IsRequired()
-        .HasMaxLength(36);
+                                       entity.Property(f => f.Id).IsRequired().HasMaxLength(36);
 
-      entity.Property(f => f.Name)
-        .IsRequired()
-        .HasMaxLength(256);
+                                       entity.Property(f => f.Name).IsRequired().HasMaxLength(256);
 
-      entity.Property(f => f.BackgroundColor)
-        .IsRequired()
-        .HasMaxLength(8)
-        .HasDefaultValue("FFFFFFFF");
+                                       entity.Property(f => f.BackgroundColor)
+                                             .IsRequired()
+                                             .HasMaxLength(9)
+                                             .HasDefaultValue("#FFFFFFFF");
 
-      entity.Property(f => f.Opacity)
-        .HasDefaultValue(100);
+                                       entity.Property(f => f.Opacity).HasDefaultValue(100);
 
-      entity.Property(f => f.IsActive)
-        .HasDefaultValue(true);
+                                       entity.Property(f => f.IsActive).HasDefaultValue(true);
 
-      entity.Property(f => f.CreatedAt)
-        .IsRequired();
+                                       entity.Property(f => f.CreatedAt).IsRequired();
 
-      entity.Property(f => f.UpdatedAt)
-        .IsRequired();
+                                       entity.Property(f => f.UpdatedAt).IsRequired();
 
-      // Set table name
-      entity.ToTable("Fences");
-    });
+                                       entity.HasIndex(f => f.Name)
+                                             .HasDatabaseName("IX_Fences_Name");
+
+                                       entity.HasIndex(f => f.IsActive)
+                                             .HasDatabaseName("IX_Fences_IsActive");
+
+                                       // Set table name
+                                       entity.ToTable("Fences");
+                                     }
+    );
+
+    // Configure FenceItem entity
+    modelBuilder.Entity<FenceItemEntity>(entity =>
+                                         {
+                                           entity.HasKey(fi => fi.Id);
+
+                                           entity.Property(fi => fi.Id)
+                                                 .IsRequired()
+                                                 .HasMaxLength(36);
+
+                                           entity.Property(fi => fi.DisplayName)
+                                                 .IsRequired()
+                                                 .HasMaxLength(256);
+
+                                           entity.Property(fi => fi.Path)
+                                                 .IsRequired()
+                                                 .HasMaxLength(1024);
+
+                                           entity.Property(fi => fi.ItemType).IsRequired();
+
+                                           entity.Property(fi => fi.SortOrder).HasDefaultValue(0);
+
+                                           entity.Property(fi => fi.CreatedAt).IsRequired();
+
+                                           entity.HasOne(fi => fi.Fence)
+                                                 .WithMany(f => f.Items)
+                                                 .HasForeignKey(fi => fi.FenceId)
+                                                 .OnDelete(DeleteBehavior.Cascade);
+
+                                           entity.HasIndex(fi => fi.FenceId)
+                                                 .HasDatabaseName("IX_FenceItems_FenceId");
+
+                                           entity.ToTable("FenceItems");
+                                         }
+    );
   }
 
   #endregion

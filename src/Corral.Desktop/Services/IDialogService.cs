@@ -11,6 +11,8 @@ namespace Corral.Desktop.Services;
 /// </summary>
 public interface IDialogService
 {
+  #region Methods
+
   /// <summary>
   ///   Shows the create zone dialog.
   /// </summary>
@@ -26,4 +28,6 @@ public interface IDialogService
   /// <param name="opacity">The current opacity (0-100).</param>
   /// <returns>True if the user confirmed, false if cancelled.</returns>
   bool ShowEditZoneDialog(string fenceId, string name, string color, int opacity);
+
+  #endregion
 }

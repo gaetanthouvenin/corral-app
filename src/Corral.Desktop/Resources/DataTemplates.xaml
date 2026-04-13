@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ResourceDictionary
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:converters="clr-namespace:Corral.Desktop.Converters"
-  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+  xmlns:behaviors="clr-namespace:Corral.Desktop.Behaviors">
 
   <ResourceDictionary.MergedDictionaries>
-    <ResourceDictionary Source="Brushes.xaml" />
-    <ResourceDictionary Source="Styles.xaml" />
+    <ResourceDictionary Source="Brushes.xaml"/>
+    <ResourceDictionary Source="Styles.xaml"/>
   </ResourceDictionary.MergedDictionaries>
 
   <!-- Converter Registration -->
-  <converters:StringToColorConverter x:Key="StringToColorConverter" />
-  <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
-  <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+  <converters:StringToColorConverter x:Key="StringToColorConverter"/>
+  <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+  <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
   <!-- Context Menu for Zone Card -->
   <ContextMenu x:Key="ZoneCardContextMenu">
-    <MenuItem Header="Delete Zone" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.DeleteZoneCommand}" CommandParameter="{Binding Id}">
+    <MenuItem Header="Delete Zone"
+              Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.DeleteZoneCommand}"
+              CommandParameter="{Binding Id}">
       <MenuItem.Icon>
-        <iconPacks:PackIconMaterial Kind="Delete" Width="12" Height="12" Foreground="{StaticResource BrushTextSecondary}" />
+        <iconPacks:PackIconMaterial Kind="Delete"
+                                    Width="12"
+                                    Height="12"
+                                    Foreground="{StaticResource BrushTextSecondary}"/>
       </MenuItem.Icon>
     </MenuItem>
   </ContextMenu>
@@ -30,22 +37,25 @@
       Style="{StaticResource CardBorder}"
       Height="220"
       Margin="0,0,24,24"
-      CornerRadius="8">
+      CornerRadius="8"
+      behaviors:DropBehavior.DropCommand="{Binding DropFilesCommand}"
+      behaviors:DropBehavior.DragOverHighlight="#1AFFFFFF">
       <Grid>
         <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="*" />
-          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+          <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Top Header (Title + Toggle) -->
-        <Grid Grid.Row="0" Margin="0,0,0,8">
+        <Grid Grid.Row="0"
+              Margin="0,0,0,8">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
-          
+
           <TextBlock
             Grid.Column="0"
             Text="{Binding Name}"
@@ -53,46 +63,143 @@
             FontWeight="Bold"
             Foreground="{StaticResource BrushTextPrimary}"
             VerticalAlignment="Center"
-            TextTrimming="CharacterEllipsis" />
+            TextTrimming="CharacterEllipsis"/>
 
-          <!-- Mock Toggle Switch -->
-          <Border Grid.Column="1" Width="36" Height="20" Background="{Binding Color, Converter={StaticResource StringToColorConverter}}" CornerRadius="10" VerticalAlignment="Center">
-             <Ellipse Width="14" Height="14" Fill="White" HorizontalAlignment="Right" Margin="3" />
-          </Border>
+          <!-- Real Toggle Switch -->
+          <ToggleButton Grid.Column="1"
+                        Style="{StaticResource ToggleSwitchStyle}"
+                        IsChecked="{Binding IsActive}"
+                        Tag="{Binding Color, Converter={StaticResource StringToColorConverter}}"
+                        VerticalAlignment="Center"/>
         </Grid>
 
         <!-- Status Indicator -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,16">
-          <Ellipse Width="6" Height="6" Fill="{Binding Color, Converter={StaticResource StringToColorConverter}}" VerticalAlignment="Center" />
-          <TextBlock Text="ACTIVE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushTextSecondary}" Margin="8,0,0,0" VerticalAlignment="Center" />
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="0,0,0,16">
+          <Ellipse x:Name="StatusDot"
+                   Width="6"
+                   Height="6"
+                   Fill="{StaticResource BrushTextSecondary}"
+                   VerticalAlignment="Center"/>
+          <TextBlock x:Name="StatusText"
+                     Text="STANDBY"
+                     FontSize="10"
+                     FontWeight="Bold"
+                     Foreground="{StaticResource BrushTextSecondary}"
+                     Margin="8,0,0,0"
+                     VerticalAlignment="Center"/>
         </StackPanel>
 
-        <!-- Center Icon Placeholder Area -->
-        <Border Grid.Row="2" Background="{StaticResource BrushBackground}" CornerRadius="6" Margin="0,0,0,16">
-           <iconPacks:PackIconMaterial Kind="ApplicationOutline" Foreground="{Binding Color, Converter={StaticResource StringToColorConverter}}" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <!-- Items List or Empty Placeholder — also acts as the drop target -->
+        <Border Grid.Row="2"
+                Background="{StaticResource BrushBackground}"
+                CornerRadius="6"
+                Margin="0,0,0,16"
+                behaviors:DropBehavior.DropCommand="{Binding DropFilesCommand}"
+                behaviors:DropBehavior.DragOverHighlight="#1AFFFFFF">
+          <Grid>
+            <!-- Empty state -->
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding Items.Count, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}">
+              <iconPacks:PackIconMaterial Kind="ApplicationOutline"
+                                          Foreground="{Binding Color, Converter={StaticResource StringToColorConverter}}"
+                                          Width="24"
+                                          Height="24"
+                                          HorizontalAlignment="Center"/>
+              <TextBlock Text="DROP FILES HERE"
+                         FontSize="9"
+                         Foreground="{StaticResource BrushTextTertiary}"
+                         HorizontalAlignment="Center"
+                         Margin="0,6,0,0"/>
+            </StackPanel>
+            <!-- Items list -->
+            <ItemsControl ItemsSource="{Binding Items}"
+                          Margin="8,6">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <StackPanel Orientation="Horizontal"
+                              Margin="0,2">
+                    <Image Source="{Binding Icon}"
+                           Width="16"
+                           Height="16"
+                           VerticalAlignment="Center"
+                           Margin="0,0,6,0"/>
+                    <TextBlock Text="{Binding DisplayName}"
+                               FontSize="11"
+                               Foreground="{StaticResource BrushTextPrimary}"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"/>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Grid>
         </Border>
 
         <!-- Bottom Actions -->
         <Grid Grid.Row="3">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
 
-          <Button Grid.Column="0" Command="{Binding EditCommand}" Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand">
+          <Button Grid.Column="0"
+                  Command="{Binding EditCommand}"
+                  Style="{StaticResource ButtonBase}"
+                  HorizontalAlignment="Left">
             <StackPanel Orientation="Horizontal">
-              <iconPacks:PackIconMaterial Kind="Pencil" Width="12" Height="12" Foreground="{StaticResource BrushTextSecondary}" VerticalAlignment="Center" Margin="0,0,8,0" />
-              <TextBlock Text="EDIT ZONE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushTextSecondary}" VerticalAlignment="Center" />
+              <iconPacks:PackIconMaterial Kind="Pencil"
+                                          Width="12"
+                                          Height="12"
+                                          Foreground="{StaticResource BrushTextSecondary}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,8,0"/>
+              <TextBlock Text="EDIT ZONE"
+                         FontSize="10"
+                         FontWeight="Bold"
+                         Foreground="{StaticResource BrushTextSecondary}"
+                         VerticalAlignment="Center"/>
             </StackPanel>
           </Button>
 
-          <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ContextMenu="{StaticResource ZoneCardContextMenu}">
-            <iconPacks:PackIconMaterial Kind="DotsHorizontal" Width="14" Height="14" Foreground="{StaticResource BrushTextSecondary}" VerticalAlignment="Center" />
+          <Button Grid.Column="1"
+                  Command="{Binding DeleteCommand}"
+                  Style="{StaticResource ButtonBase}"
+                  HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal">
+              <iconPacks:PackIconMaterial Kind="Delete"
+                                          Width="12"
+                                          Height="12"
+                                          Foreground="{StaticResource BrushTextSecondary}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,8,0"/>
+              <TextBlock Text="DELETE"
+                         FontSize="10"
+                         FontWeight="Bold"
+                         Foreground="{StaticResource BrushTextSecondary}"
+                         VerticalAlignment="Center"/>
+            </StackPanel>
           </Button>
         </Grid>
 
       </Grid>
     </Border>
+    <DataTemplate.Triggers>
+      <DataTrigger Binding="{Binding IsActive}"
+          Value="True">
+        <Setter TargetName="StatusDot"
+            Property="Fill"
+            Value="{Binding Color, Converter={StaticResource StringToColorConverter}}"/>
+        <Setter TargetName="StatusText"
+            Property="Foreground"
+            Value="{Binding Color, Converter={StaticResource StringToColorConverter}}"/>
+        <Setter TargetName="StatusText"
+            Property="Text"
+            Value="ACTIVE"/>
+      </DataTrigger>
+    </DataTemplate.Triggers>
   </DataTemplate>
 
 </ResourceDictionary>

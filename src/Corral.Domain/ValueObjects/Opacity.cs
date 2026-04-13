@@ -6,20 +6,19 @@
 namespace Corral.Domain.ValueObjects;
 
 /// <summary>
-///   Représente le niveau d'opacité (transparence) d'une Fence, exprimé en pourcentage (0-100%).
+///   Represents the opacity (transparency) level of a Fence, expressed as a percentage (0-100%).
 /// </summary>
 /// <remarks>
 ///   <para>
-///     Opacity est un Value Object immuable représentant le degré de transparence d'une zone Fence.
-///     Les valeurs valides sont comprises entre 0 (complètement transparent) et 100 (complètement
-///     opaque).
+///     Opacity is an immutable Value Object representing the degree of transparency of a Fence zone.
+///     Valid values range from 0 (completely transparent) to 100 (completely opaque).
 ///   </para>
 ///   <para>
-///     La classe offre également des conversions vers/depuis une représentation normalisée (0.0-1.0)
-///     couramment utilisée dans les frameworks graphiques.
+///     The record also provides conversions to and from a normalized representation (0.0-1.0)
+///     commonly used in graphics frameworks.
 ///   </para>
 ///   <para>
-///     Exemples d'utilisation:
+///     Usage examples:
 ///     <code>
 /// var opaque = Opacity.Opaque; // 100%
 /// var transparent = Opacity.Transparent; // 0%
@@ -34,13 +33,13 @@ public record Opacity(int Percentage)
   #region Fields
 
   /// <summary>
-  ///   La valeur minimale d'opacité (complètement transparent).
+  ///   The minimum opacity value (completely transparent).
   /// </summary>
   /// <value>0 (0%).</value>
   public const int Min = 0;
 
   /// <summary>
-  ///   La valeur maximale d'opacité (complètement opaque).
+  ///   The maximum opacity value (completely opaque).
   /// </summary>
   /// <value>100 (100%).</value>
   public const int Max = 100;
@@ -50,21 +49,21 @@ public record Opacity(int Percentage)
   #region Properties
 
   /// <summary>
-  ///   Obtient le niveau d'opacité complètement transparent (0%).
+  ///   Gets the completely transparent opacity level (0%).
   /// </summary>
-  /// <value>Une instance de Opacity avec Percentage=0.</value>
+  /// <value>An <see cref="Opacity" /> instance with Percentage = 0.</value>
   public static Opacity Transparent => new(0);
 
   /// <summary>
-  ///   Obtient le niveau d'opacité semi-transparent (50%).
+  ///   Gets the semi-transparent opacity level (50%).
   /// </summary>
-  /// <value>Une instance de Opacity avec Percentage=50.</value>
+  /// <value>An <see cref="Opacity" /> instance with Percentage = 50.</value>
   public static Opacity SemiTransparent => new(50);
 
   /// <summary>
-  ///   Obtient le niveau d'opacité complètement opaque (100%).
+  ///   Gets the completely opaque opacity level (100%).
   /// </summary>
-  /// <value>Une instance de Opacity avec Percentage=100.</value>
+  /// <value>An <see cref="Opacity" /> instance with Percentage = 100.</value>
   public static Opacity Opaque => new(100);
 
   #endregion
@@ -72,11 +71,13 @@ public record Opacity(int Percentage)
   #region Methods
 
   /// <summary>
-  ///   Crée un nouveau niveau d'opacité avec validation.
+  ///   Creates a new opacity level with validation.
   /// </summary>
-  /// <param name="percentage">Pourcentage d'opacité. Doit être entre 0 et 100 (inclus).</param>
-  /// <returns>Une nouvelle instance de Opacity.</returns>
-  /// <exception cref="InvalidOperationException">Levée si le pourcentage est hors de la plage [0, 100].</exception>
+  /// <param name="percentage">The opacity percentage. Must be between 0 and 100 (inclusive).</param>
+  /// <returns>A new <see cref="Opacity" /> instance.</returns>
+  /// <exception cref="InvalidOperationException">
+  ///   Thrown if the percentage is outside the range [0, 100].
+  /// </exception>
   /// <example>
   ///   <code>
   /// var opacity = Opacity.Create(75); // 75% opaque
@@ -84,21 +85,20 @@ public record Opacity(int Percentage)
   /// </example>
   public static Opacity Create(int percentage)
   {
-    if (percentage < Min || percentage > Max)
-    {
-      throw new InvalidOperationException($"Opacity doit être entre {Min} et {Max}");
-    }
-
-    return new Opacity(percentage);
+    return percentage is < Min or > Max
+             ? throw new InvalidOperationException($"Opacity must be between {Min} and {Max}")
+             : new Opacity(percentage);
   }
 
   /// <summary>
-  ///   Convertit l'opacité en valeur normalisée (entre 0.0 et 1.0).
+  ///   Converts the opacity to a normalized value (between 0.0 and 1.0).
   /// </summary>
-  /// <returns>Valeur normalisée où 0.0 = transparent et 1.0 = opaque.</returns>
+  /// <returns>
+  ///   A normalized value where 0.0 = transparent and 1.0 = opaque.
+  /// </returns>
   /// <remarks>
-  ///   Cette conversion est utile pour les frameworks graphiques qui utilisent
-  ///   une représentation normalisée de l'opacité.
+  ///   This conversion is useful for graphics frameworks that use a normalized
+  ///   representation of opacity.
   /// </remarks>
   /// <example>
   ///   <code>
@@ -112,15 +112,16 @@ public record Opacity(int Percentage)
   }
 
   /// <summary>
-  ///   Crée une opacité à partir d'une valeur normalisée (entre 0.0 et 1.0).
+  ///   Creates an opacity level from a normalized value (between 0.0 and 1.0).
   /// </summary>
-  /// <param name="normalized">Valeur normalisée. Doit être entre 0.0 et 1.0 (inclus).</param>
-  /// <returns>Une nouvelle instance de Opacity.</returns>
+  /// <param name="normalized">
+  ///   The normalized value. Must be between 0.0 and 1.0 (inclusive).
+  /// </param>
+  /// <returns>A new <see cref="Opacity" /> instance.</returns>
   /// <exception cref="InvalidOperationException">
-  ///   Levée si la valeur normalisée est hors de la plage
-  ///   [0.0, 1.0].
+  ///   Thrown if the normalized value is outside the range [0.0, 1.0].
   /// </exception>
-  /// <remarks>La conversion arrondit le résultat à l'entier le plus proche.</remarks>
+  /// <remarks>The conversion rounds the result to the nearest integer.</remarks>
   /// <example>
   ///   <code>
   /// var opacity = Opacity.FromNormalized(0.75); // 75% opaque
@@ -128,12 +129,9 @@ public record Opacity(int Percentage)
   /// </example>
   public static Opacity FromNormalized(double normalized)
   {
-    if (normalized < 0.0 || normalized > 1.0)
-    {
-      throw new InvalidOperationException("Valeur normalisée doit être entre 0.0 et 1.0");
-    }
-
-    return new Opacity((int)(normalized * 100));
+    return normalized is < 0.0 or > 1.0
+             ? throw new InvalidOperationException("Normalized value must be between 0.0 and 1.0")
+             : new Opacity((int)(normalized * 100));
   }
 
   #endregion

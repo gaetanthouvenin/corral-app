@@ -26,9 +26,9 @@ namespace Corral.Infrastructure.Migrations
                     b.Property<string>("BackgroundColor")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(8)
+                        .HasMaxLength(9)
                         .HasColumnType("TEXT")
-                        .HasDefaultValue("FFFFFFFF");
+                        .HasDefaultValue("#FFFFFFFF");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -65,7 +65,66 @@ namespace Corral.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IsActive")
+                        .HasDatabaseName("IX_Fences_IsActive");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Fences_Name");
+
                     b.ToTable("Fences", (string)null);
+                });
+
+            modelBuilder.Entity("Corral.Infrastructure.Persistence.Entities.FenceItemEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FenceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ItemType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FenceId")
+                        .HasDatabaseName("IX_FenceItems_FenceId");
+
+                    b.ToTable("FenceItems", (string)null);
+                });
+
+            modelBuilder.Entity("Corral.Infrastructure.Persistence.Entities.FenceItemEntity", b =>
+                {
+                    b.HasOne("Corral.Infrastructure.Persistence.Entities.FenceEntity", "Fence")
+                        .WithMany("Items")
+                        .HasForeignKey("FenceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Fence");
+                });
+
+            modelBuilder.Entity("Corral.Infrastructure.Persistence.Entities.FenceEntity", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

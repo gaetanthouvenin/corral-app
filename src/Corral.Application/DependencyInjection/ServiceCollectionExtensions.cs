@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using Corral.Application.Behaviors;
 using Corral.Application.Commands.CreateFence;
 
@@ -19,6 +20,8 @@ namespace Corral.Application.DependencyInjection;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
+  #region Methods
+
   /// <summary>
   ///   Enregistre MediatR, les behaviors de pipeline, et les validators FluentValidation.
   /// </summary>
@@ -26,17 +29,23 @@ public static class ServiceCollectionExtensions
   {
     // MediatR — scan de l'assembly Application pour commands, queries et handlers
     services.AddMediatR(cfg =>
-    {
-      cfg.RegisterServicesFromAssemblyContaining<CreateFenceCommand>();
+                        {
+                          cfg.RegisterServicesFromAssemblyContaining<CreateFenceCommand>();
 
-      // Ordre d'exécution : LoggingBehavior → ValidationBehavior → Handler
-      cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-      cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-    });
+                          // Ordre d'exécution : LoggingBehavior → ValidationBehavior → Handler
+                          cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+                          cfg.AddBehavior(
+                            typeof(IPipelineBehavior<,>),
+                            typeof(ValidationBehavior<,>)
+                          );
+                        }
+    );
 
     // FluentValidation — scan de l'assembly Application pour tous les validators
     services.AddValidatorsFromAssemblyContaining<CreateFenceCommand>();
 
     return services;
   }
+
+  #endregion
 }

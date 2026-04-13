@@ -13,6 +13,8 @@ namespace Corral.Infrastructure.Persistence;
 /// </summary>
 public class CorralDbContextFactory : IDesignTimeDbContextFactory<CorralDbContext>
 {
+  #region Implementation of IDesignTimeDbContextFactory<CorralDbContext>
+
   /// <summary>
   ///   Creates a new instance of the CorralDbContext.
   /// </summary>
@@ -24,4 +26,6 @@ public class CorralDbContextFactory : IDesignTimeDbContextFactory<CorralDbContex
 
     return new CorralDbContext(optionsBuilder.Options);
   }
+
+  #endregion
 }

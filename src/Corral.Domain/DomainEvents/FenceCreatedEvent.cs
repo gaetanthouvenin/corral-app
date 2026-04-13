@@ -8,14 +8,26 @@ using Corral.Domain.Aggregates;
 namespace Corral.Domain.DomainEvents;
 
 /// <summary>
-///   Événement déclenché quand une fence est créée
+///   Represents a domain event that is triggered when a fence is created.
 /// </summary>
 public record FenceCreatedEvent(FenceId FenceId, string Name) : IDomainEvent
 {
   #region Properties
 
+  /// <summary>
+  ///   Gets the unique identifier for the domain event.
+  /// </summary>
+  /// <value>
+  ///   A <see cref="string" /> representing the unique identifier of the event.
+  /// </value>
   public string EventId { get; } = Guid.NewGuid().ToString();
 
+  /// <summary>
+  ///   Gets the date and time when the event occurred.
+  /// </summary>
+  /// <value>
+  ///   A <see cref="DateTime" /> representing the UTC timestamp of the event occurrence.
+  /// </value>
   public DateTime OccurredAt { get; } = DateTime.UtcNow;
 
   #endregion

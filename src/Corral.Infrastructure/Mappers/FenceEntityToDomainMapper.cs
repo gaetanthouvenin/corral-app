@@ -40,7 +40,7 @@ public class FenceEntityToDomainMapper : IMapper<FenceEntity, Fence>
     var backgroundColor = Color.FromHexString(entity.BackgroundColor);
     var opacity = new Opacity(entity.Opacity);
 
-    return Fence.Reconstitute(
+    var fence = Fence.Reconstitute(
       fenceId,
       entity.Name,
       position,
@@ -51,6 +51,24 @@ public class FenceEntityToDomainMapper : IMapper<FenceEntity, Fence>
       entity.CreatedAt,
       entity.UpdatedAt
     );
+
+    // Load items if present
+    if (entity.Items != null && entity.Items.Count > 0)
+    {
+      var items = entity.Items.Select(i => FenceItem.Reconstitute(
+                                        i.Id,
+                                        i.DisplayName,
+                                        i.Path,
+                                        (FenceItemType)i.ItemType,
+                                        i.SortOrder,
+                                        i.CreatedAt
+                                      )
+      );
+
+      fence.LoadItems(items);
+    }
+
+    return fence;
   }
 
   /// <summary>
@@ -64,7 +82,7 @@ public class FenceEntityToDomainMapper : IMapper<FenceEntity, Fence>
   /// </remarks>
   public List<Fence> MapList(IEnumerable<FenceEntity> entities)
   {
-    return entities.Select(Map).ToList();
+    return [.. entities.Select(Map)];
   }
 
   #endregion

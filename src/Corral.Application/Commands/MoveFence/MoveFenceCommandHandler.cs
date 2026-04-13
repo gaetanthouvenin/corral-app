@@ -64,7 +64,7 @@ public class MoveFenceCommandHandler(IUnitOfWork unitOfWork)
     fence.Move(newPosition);
 
     // Update in the repository
-    unitOfWork.Fences.Update(fence);
+    await unitOfWork.Fences.UpdateAsync(fence, cancellationToken);
 
     // Persist changes
     await unitOfWork.SaveChangesAsync(cancellationToken);

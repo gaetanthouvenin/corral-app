@@ -3,10 +3,14 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
+using System.Collections.ObjectModel;
+
 using Corral.Desktop.Services;
 using Corral.Desktop.ViewModels;
 using Corral.Domain.Aggregates;
 using Corral.Domain.Contracts.Mappers;
+
 using MediatR;
 
 namespace Corral.Desktop.Mappers;
@@ -22,7 +26,8 @@ namespace Corral.Desktop.Mappers;
 ///   simpler types (e.g., integers, strings, doubles). This approach maintains
 ///   separation of concerns between the domain and presentation layers.
 /// </remarks>
-public class FenceToViewModelMapper(IDialogService dialogService, IMediator mediator) : IMapper<Fence, FenceViewModel>
+public class FenceToViewModelMapper(IDialogService dialogService, IMediator mediator, IIconService iconService)
+  : IMapper<Fence, FenceViewModel>
 {
   #region Implementation of IMapper<Fence,FenceViewModel>
 
@@ -52,7 +57,19 @@ public class FenceToViewModelMapper(IDialogService dialogService, IMediator medi
       Opacity = fence.Opacity.Percentage / 100.0, // Conversion WPF (0-1 au lieu de 0-100)
       IsActive = fence.IsActive,
       CreatedAt = fence.CreatedAt,
-      UpdatedAt = fence.UpdatedAt ?? DateTime.UtcNow
+      UpdatedAt = fence.UpdatedAt ?? DateTime.UtcNow,
+      Items = new ObservableCollection<FenceItemViewModel>(
+        fence.Items.Select(i => new FenceItemViewModel
+          {
+            Id = i.Id,
+            DisplayName = i.DisplayName,
+            Path = i.Path,
+            ItemType = (int)i.ItemType,
+            SortOrder = i.SortOrder,
+            Icon = iconService.GetIcon(i.Path)
+          }
+        )
+      )
     };
   }
 
@@ -68,7 +85,7 @@ public class FenceToViewModelMapper(IDialogService dialogService, IMediator medi
   /// </remarks>
   public List<FenceViewModel> MapList(IEnumerable<Fence> fences)
   {
-    return fences.Select(Map).ToList();
+    return [.. fences.Select(Map)];
   }
 
   #endregion
