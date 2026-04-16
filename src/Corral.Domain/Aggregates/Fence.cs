@@ -491,6 +491,57 @@ public class Fence
     }
 
     _items.Remove(item);
+    for (var index = 0; index < _items.Count; index++)
+    {
+      _items[index].UpdateSortOrder(index);
+    }
+
+    UpdatedAt = DateTime.UtcNow;
+    return this;
+  }
+
+  /// <summary>
+  ///   Reorders an item inside the fence.
+  /// </summary>
+  /// <param name="itemId">The ID of the item being moved.</param>
+  /// <param name="targetItemId">The ID of the item before which the source item is inserted. Empty means move to the end.</param>
+  /// <returns>The current fence instance.</returns>
+  /// <exception cref="InvalidOperationException">Thrown when the source or target item does not exist.</exception>
+  public Fence ReorderItems(string itemId, string targetItemId)
+  {
+    var item = _items.Find(i => i.Id == itemId);
+    if (item == null)
+    {
+      throw new InvalidOperationException($"Item with ID '{itemId}' not found");
+    }
+
+    if (!string.IsNullOrWhiteSpace(targetItemId) && itemId == targetItemId)
+    {
+      return this;
+    }
+
+    _items.Remove(item);
+
+    if (string.IsNullOrWhiteSpace(targetItemId))
+    {
+      _items.Add(item);
+    }
+    else
+    {
+      var targetIndex = _items.FindIndex(i => i.Id == targetItemId);
+      if (targetIndex < 0)
+      {
+        throw new InvalidOperationException($"Target item with ID '{targetItemId}' not found");
+      }
+
+      _items.Insert(targetIndex, item);
+    }
+
+    for (var index = 0; index < _items.Count; index++)
+    {
+      _items[index].UpdateSortOrder(index);
+    }
+
     UpdatedAt = DateTime.UtcNow;
     return this;
   }

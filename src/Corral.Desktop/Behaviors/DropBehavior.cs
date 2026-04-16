@@ -167,13 +167,10 @@ public static class DropBehavior
       {
         ApplyHighlight(element);
       }
-    }
-    else
-    {
-      e.Effects = DragDropEffects.None;
-    }
 
-    e.Handled = true;
+      e.Handled = true;
+      return;
+    }
   }
 
   /// <summary>

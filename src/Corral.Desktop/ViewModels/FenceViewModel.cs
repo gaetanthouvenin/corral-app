@@ -13,6 +13,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using Corral.Application.Commands.AddItemToFence;
 using Corral.Application.Commands.DeleteFence;
+using Corral.Application.Commands.ReorderFenceItems;
+using Corral.Application.Commands.RemoveItemFromFence;
 using Corral.Desktop.Services;
 
 using MediatR;
@@ -243,6 +245,103 @@ public partial class FenceViewModel(IDialogService dialogService, IMediator medi
       catch (Exception ex)
       {
         Debug.WriteLine($"Error dropping files onto fence {Name}: {ex.Message}");
+      }
+    }
+  }
+
+  /// <summary>
+  ///   Relay command to remove a specific item from this fence.
+  /// </summary>
+  [RelayCommand]
+  public async Task RemoveItem(FenceItemViewModel item)
+  {
+    if (mediator == null || item == null)
+    {
+      return;
+    }
+
+    try
+    {
+      var command = new RemoveItemFromFenceCommand(Id, item.Id);
+      await mediator.Send(command);
+      Items.Remove(item);
+    }
+    catch (Exception ex)
+    {
+      Debug.WriteLine($"Error removing item '{item.DisplayName}' from fence {Name}: {ex.Message}");
+
+      if (OnChanged != null)
+      {
+        await OnChanged();
+      }
+    }
+  }
+
+  /// <summary>
+  ///   Reorders items inside the fence and persists the new order.
+  /// </summary>
+  /// <param name="parameters">An object array containing the source item and the target item.</param>
+  [RelayCommand]
+  public async Task ReorderItems(object[] parameters)
+  {
+    if (mediator == null || parameters == null || parameters.Length != 2)
+    {
+      return;
+    }
+
+    if (parameters[0] is not FenceItemViewModel sourceItem)
+    {
+      return;
+    }
+
+    var targetItem = parameters[1] as FenceItemViewModel;
+
+    var oldIndex = Items.IndexOf(sourceItem);
+    if (oldIndex < 0)
+    {
+      return;
+    }
+
+    var newIndex = targetItem != null ? Items.IndexOf(targetItem) : Items.Count - 1;
+    if (newIndex < 0)
+    {
+      newIndex = Items.Count - 1;
+    }
+
+    if (targetItem != null && oldIndex < newIndex)
+    {
+      newIndex--;
+    }
+
+    if (oldIndex == newIndex)
+    {
+      return;
+    }
+
+    Items.Move(oldIndex, newIndex);
+
+    for (var index = 0; index < Items.Count; index++)
+    {
+      Items[index].SortOrder = index;
+    }
+
+    try
+    {
+      var command = new ReorderFenceItemsCommand(
+        Id,
+        sourceItem.Id,
+        targetItem != null ? targetItem.Id : string.Empty
+      );
+
+      await mediator.Send(command);
+    }
+    catch (Exception ex)
+    {
+      Debug.WriteLine($"Error reordering items in fence {Name}: {ex.Message}");
+
+      if (OnChanged != null)
+      {
+        await OnChanged();
       }
     }
   }

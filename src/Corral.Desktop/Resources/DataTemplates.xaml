@@ -116,7 +116,8 @@
             </StackPanel>
             <!-- Items list -->
             <ItemsControl ItemsSource="{Binding Items}"
-                          Margin="8,6">
+                          Margin="8,6"
+                          behaviors:ReorderItemsBehavior.ReorderCommand="{Binding ReorderItemsCommand}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
                   <StackPanel Orientation="Horizontal"

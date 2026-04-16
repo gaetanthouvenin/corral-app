@@ -326,6 +326,39 @@ public class FenceTests
     Should.Throw<ArgumentNullException>(() => fence.Resize(null));
   }
 
+  [Fact]
+  public void ReorderItems_ShouldMoveItemBeforeTargetAndUpdateSortOrder()
+  {
+    var fence = CreateValidFence();
+    var firstItem = fence.AddItem("A", "a.txt", FenceItemType.File);
+    var secondItem = fence.AddItem("B", "b.txt", FenceItemType.File);
+    var thirdItem = fence.AddItem("C", "c.txt", FenceItemType.File);
+
+    fence.ReorderItems(thirdItem.Id, secondItem.Id);
+
+    fence.Items[0].Id.ShouldBe(firstItem.Id);
+    fence.Items[1].Id.ShouldBe(thirdItem.Id);
+    fence.Items[2].Id.ShouldBe(secondItem.Id);
+    fence.Items[0].SortOrder.ShouldBe(0);
+    fence.Items[1].SortOrder.ShouldBe(1);
+    fence.Items[2].SortOrder.ShouldBe(2);
+  }
+
+  [Fact]
+  public void ReorderItems_EmptyTargetItemId_ShouldMoveItemToEnd()
+  {
+    var fence = CreateValidFence();
+    var firstItem = fence.AddItem("A", "a.txt", FenceItemType.File);
+    var secondItem = fence.AddItem("B", "b.txt", FenceItemType.File);
+    var thirdItem = fence.AddItem("C", "c.txt", FenceItemType.File);
+
+    fence.ReorderItems(firstItem.Id, string.Empty);
+
+    fence.Items[0].Id.ShouldBe(secondItem.Id);
+    fence.Items[1].Id.ShouldBe(thirdItem.Id);
+    fence.Items[2].Id.ShouldBe(firstItem.Id);
+  }
+
   #endregion
 
   #region Rename

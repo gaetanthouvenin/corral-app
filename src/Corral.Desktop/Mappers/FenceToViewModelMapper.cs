@@ -61,7 +61,7 @@ public class FenceToViewModelMapper(
       CreatedAt = fence.CreatedAt,
       UpdatedAt = fence.UpdatedAt ?? DateTime.UtcNow,
       Items = new ObservableCollection<FenceItemViewModel>(
-        fence.Items.Select(i => new FenceItemViewModel
+        fence.Items.OrderBy(i => i.SortOrder).Select(i => new FenceItemViewModel
           {
             Id = i.Id,
             DisplayName = i.DisplayName,

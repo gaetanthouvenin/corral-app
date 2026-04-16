@@ -130,6 +130,7 @@ public class OverlayService(
 
     var overlay = new FenceOverlayWindow();
     var prefs = await preferencesService.GetPreferencesAsync();
+    overlay.SetViewModel(fence);
     overlay.UpdateFenceDisplay(
       fence.Name,
       fence.X,

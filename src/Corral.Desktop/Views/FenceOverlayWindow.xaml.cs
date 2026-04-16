@@ -6,6 +6,7 @@
 
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -20,9 +21,11 @@ using Corral.Desktop.ViewModels;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using ClickMode = Corral.Desktop.Models.ClickMode;
+using ContextMenu = System.Windows.Controls.ContextMenu;
 using DragCompletedEventArgs = System.Windows.Controls.Primitives.DragCompletedEventArgs;
 using DragDeltaEventArgs = System.Windows.Controls.Primitives.DragDeltaEventArgs;
 using DragStartedEventArgs = System.Windows.Controls.Primitives.DragStartedEventArgs;
+using MenuItem = System.Windows.Controls.MenuItem;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Orientation = System.Windows.Controls.Orientation;
 using Point = System.Windows.Point;
@@ -85,6 +88,14 @@ public partial class FenceOverlayWindow
   public event Action<int, int> DimensionsChanged;
 
   #endregion
+
+  /// <summary>
+  ///   Sets the ViewModel as DataContext so <see cref="ItemsPanel" /> and commands bind to it.
+  /// </summary>
+  public void SetViewModel(FenceViewModel viewModel)
+  {
+    DataContext = viewModel;
+  }
 
   /// <summary>
   ///   Updates the overlay with the specified fence properties.
@@ -158,7 +169,8 @@ public partial class FenceOverlayWindow
     // Populate items
     if (items != null)
     {
-      ItemsPanel.ItemsSource = items;
+      // Items are bound via DataContext (FenceViewModel.Items); no manual assignment needed.
+      // This parameter is kept for API compatibility during the transition.
     }
   }
 
@@ -189,10 +201,11 @@ public partial class FenceOverlayWindow
       ItemsPanel.ItemsPanel = new ItemsPanelTemplate(factory);
     }
 
-    // Recycler ItemsSource pour forcer WPF à re-générer tous les item containers
-    var source = ItemsPanel.ItemsSource;
-    ItemsPanel.ItemsSource = null;
-    ItemsPanel.ItemsSource = source;
+    // Restaure le binding (le recycle null/source brisait le binding XAML {Binding Items})
+    ItemsPanel.SetBinding(
+      ItemsControl.ItemsSourceProperty,
+      new System.Windows.Data.Binding("Items")
+    );
   }
 
   /// <summary>
@@ -212,8 +225,91 @@ public partial class FenceOverlayWindow
     SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TOOLWINDOW);
   }
 
-  private void OnResizeThumbDragStarted(object sender, DragStartedEventArgs e)
+  private void OnAddItemButtonClick(object sender, MouseButtonEventArgs e)
   {
+    if (DataContext is not FenceViewModel vm)
+    {
+      return;
+    }
+
+    var menuStyle = TryFindResource("OverlayContextMenu") as Style;
+    var itemStyle = TryFindResource("OverlayMenuItem") as Style;
+
+    var menu = new ContextMenu { Style = menuStyle };
+
+    var programItem = new MenuItem { Header = "Programme...", Style = itemStyle };
+    programItem.Click += (_, _) => BrowseAndAddFire(vm, BrowseMode.Program);
+
+    var fileItem = new MenuItem { Header = "Fichier...", Style = itemStyle };
+    fileItem.Click += (_, _) => BrowseAndAddFire(vm, BrowseMode.File);
+
+    var folderItem = new MenuItem { Header = "Dossier...", Style = itemStyle };
+    folderItem.Click += (_, _) => BrowseAndAddFire(vm, BrowseMode.Folder);
+
+    menu.Items.Add(programItem);
+    menu.Items.Add(fileItem);
+    menu.Items.Add(folderItem);
+
+    menu.PlacementTarget = (UIElement)sender;
+    menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+    menu.IsOpen = true;
+
+    e.Handled = true;
+  }
+
+#pragma warning disable VSTHRD100
+  private async void BrowseAndAddFire(FenceViewModel vm, BrowseMode mode)
+  {
+    await BrowseAndAdd(vm, mode);
+  }
+#pragma warning restore VSTHRD100
+
+  private async Task BrowseAndAdd(FenceViewModel vm, BrowseMode mode)
+  {
+    string path = null;
+
+    if (mode == BrowseMode.Folder)
+    {
+      var dialog = new Microsoft.Win32.OpenFolderDialog
+      {
+        Title = "Sélectionner un dossier"
+      };
+
+      if (dialog.ShowDialog() == true)
+      {
+        path = dialog.FolderName;
+      }
+    }
+    else
+    {
+      var dialog = new Microsoft.Win32.OpenFileDialog
+      {
+        Title = mode == BrowseMode.Program ? "Sélectionner un programme" : "Sélectionner un fichier",
+        Filter = mode == BrowseMode.Program
+          ? "Programmes|*.exe;*.lnk;*.bat;*.cmd|Tous les fichiers|*.*"
+          : "Tous les fichiers|*.*"
+      };
+
+      if (dialog.ShowDialog() == true)
+      {
+        path = dialog.FileName;
+      }
+    }
+
+    if (path != null)
+    {
+      await vm.DropFiles(new[] { path });
+    }
+  }
+
+  private enum BrowseMode
+  {
+    Program,
+    File,
+    Folder,
+  }
+
+  private void OnResizeThumbDragStarted(object sender, DragStartedEventArgs e)  {
     _isResizing = true;
     _resizeStartLeft = Left;
     _resizeStartTop = Top;
@@ -323,6 +419,13 @@ public partial class FenceOverlayWindow
       return;
     }
 
+    // Find parent ItemsControl to check if we're dragging an item
+    var itemsControl = FindAncestor<ItemsControl>(sender as DependencyObject);
+    if (itemsControl != null && Corral.Desktop.Behaviors.ReorderItemsBehavior.IsItemsControlDraggingItem(itemsControl))
+    {
+      return; // Don't open items during drag-and-drop
+    }
+
     var now = DateTime.Now;
     var timeSinceLastClick = (now - _lastClickTime).TotalMilliseconds;
 
@@ -384,6 +487,25 @@ public partial class FenceOverlayWindow
     }
 
     e.Handled = true;
+  }
+
+  #endregion
+
+  #region Helpers
+
+  private static T FindAncestor<T>(DependencyObject obj) where T : DependencyObject
+  {
+    while (obj != null)
+    {
+      if (obj is T ancestor)
+      {
+        return ancestor;
+      }
+
+      obj = VisualTreeHelper.GetParent(obj);
+    }
+
+    return null;
   }
 
   #endregion
