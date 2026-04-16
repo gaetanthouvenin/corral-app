@@ -1,4 +1,4 @@
-.\tools\create-selfsigned-cert.ps1 -Password "VotreMotDePasse"name: Release MSIX
+name: Release MSIX
 
 on:
   push:
