@@ -1,0 +1,91 @@
+.\tools\create-selfsigned-cert.ps1 -Password "VotreMotDePasse"name: Release MSIX
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (ex: 1.0.0)"
+        required: true
+        default: "1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  build-msix:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Determine version
+        id: version
+        shell: pwsh
+        run: |
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $v = "${{ github.ref_name }}" -replace '^v', ''
+          } else {
+            $v = "${{ github.event.inputs.version }}"
+          }
+          echo "semver=$v" >> $env:GITHUB_OUTPUT
+          Write-Host "Version : $v"
+
+      - name: Create MSIX package
+        shell: pwsh
+        run: |
+          .\tools\create-msix.ps1 -Version "${{ steps.version.outputs.semver }}"
+
+      - name: Sign MSIX
+        shell: pwsh
+        run: |
+          # Decodes the PFX certificate from the Base64 secret
+          $pfxBytes = [Convert]::FromBase64String("${{ secrets.SIGNING_CERT_PFX_BASE64 }}")
+          $pfxPath  = Join-Path $env:RUNNER_TEMP "signing.pfx"
+          [IO.File]::WriteAllBytes($pfxPath, $pfxBytes)
+
+          # Locate signtool.exe from Windows SDK
+          $signtool = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Filter "signtool.exe" -Recurse |
+            Where-Object { $_.FullName -like "*x64*" } |
+            Sort-Object { [version]($_.DirectoryName -split '\\' | Where-Object { $_ -match '^\d+\.\d+\.\d+\.\d+$' }) } -Descending |
+            Select-Object -First 1
+
+          & $signtool.FullName sign `
+            /fd SHA256 `
+            /p "${{ secrets.SIGNING_CERT_PASSWORD }}" `
+            /f $pfxPath `
+            /tr http://timestamp.digicert.com `
+            /td SHA256 `
+            "artifacts\Corral-${{ steps.version.outputs.semver }}.msix"
+
+          Remove-Item $pfxPath -Force
+          Write-Host "MSIX signe."
+        # Secrets a configurer dans GitHub -> Settings -> Secrets :
+        #   SIGNING_CERT_PFX_BASE64 : certificat PFX encode en Base64
+        #     Generer via : .\tools\create-selfsigned-cert.ps1
+        #     ou utiliser un certificat Code Signing achete
+        #   SIGNING_CERT_PASSWORD   : mot de passe du PFX
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Corral-${{ steps.version.outputs.semver }}-msix
+          path: artifacts/Corral-${{ steps.version.outputs.semver }}.msix
+          retention-days: 90
+
+      - name: Create GitHub Release (draft)
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Corral v${{ steps.version.outputs.semver }}
+          draft: true
+          generate_release_notes: true
+          files: artifacts/Corral-${{ steps.version.outputs.semver }}.msix

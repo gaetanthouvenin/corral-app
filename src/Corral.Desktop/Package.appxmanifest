@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+
+  <!--
+    IMPORTANT : ces valeurs sont remplacées automatiquement par le pipeline CI
+    via les secrets MSIX_PACKAGE_NAME et MSIX_PUBLISHER (fournis par Partner Center).
+    Pour un build local hors Store, les valeurs ci-dessous sont utilisées.
+  -->
+  <Identity
+    Name="GaetanThouvenin.Corral"
+    Publisher="CN=Gaëtan THOUVENIN"
+    Version="1.0.0.0"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>Corral</DisplayName>
+    <PublisherDisplayName>Gaëtan THOUVENIN</PublisherDisplayName>
+    <Logo>Assets\Msix\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en" />
+    <Resource Language="fr" />
+    <Resource Language="de" />
+    <Resource Language="es" />
+    <Resource Language="it" />
+  </Resources>
+
+  <Applications>
+    <Application Id="Corral" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
+      <uap:VisualElements
+        DisplayName="Corral"
+        Description="Gestionnaire de zones visuelles sur le bureau"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Msix\Square150x150Logo.png"
+        Square44x44Logo="Assets\Msix\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Msix\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\Msix\SplashScreen.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <!-- Accès au système de fichiers complet (nécessaire pour gérer les raccourcis) -->
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+
+</Package>

@@ -10,6 +10,7 @@
     <Title>Corral</Title>
   </PropertyGroup>
 
+
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="6.*" />
