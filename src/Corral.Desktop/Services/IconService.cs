@@ -3,8 +3,8 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-
 using System.Collections.Concurrent;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -22,7 +22,8 @@ public class IconService : IIconService
 {
   #region Fields
 
-  private readonly ConcurrentDictionary<string, ImageSource> _cache = new(StringComparer.OrdinalIgnoreCase);
+  private readonly ConcurrentDictionary<string, ImageSource> _cache =
+    new(StringComparer.OrdinalIgnoreCase);
 
   #endregion
 
@@ -68,10 +69,17 @@ public class IconService : IIconService
     const uint fileAttributes = 0x80; // FILE_ATTRIBUTE_NORMAL
 
     // If the path exists on disk, ask for the real icon (resolves .lnk targets automatically).
-    var useRealIcon = System.IO.File.Exists(path) || System.IO.Directory.Exists(path);
+    var useRealIcon = File.Exists(path) || Directory.Exists(path);
     var effectiveFlags = useRealIcon ? SHGFI_ICON | SHGFI_LARGEICON : flags;
 
-    var result = SHGetFileInfo(path, useRealIcon ? 0 : fileAttributes, ref shfi, (uint)Marshal.SizeOf(shfi), effectiveFlags);
+    var result = SHGetFileInfo(
+      path,
+      useRealIcon ? 0 : fileAttributes,
+      ref shfi,
+      (uint)Marshal.SizeOf(shfi),
+      effectiveFlags
+    );
+
     if (result == IntPtr.Zero || shfi.hIcon == IntPtr.Zero)
     {
       return null;
@@ -84,6 +92,7 @@ public class IconService : IIconService
         Int32Rect.Empty,
         BitmapSizeOptions.FromEmptyOptions()
       );
+
       bitmap.Freeze();
       return bitmap;
     }
@@ -98,7 +107,7 @@ public class IconService : IIconService
     var hIcon = IntPtr.Zero;
     try
     {
-      ExtractIconEx(dll, index, out hIcon, out _, 1);
+      ExtractIconEx(dll, index, out hIcon, out var _, 1);
       if (hIcon == IntPtr.Zero)
       {
         return null;
@@ -109,6 +118,7 @@ public class IconService : IIconService
         Int32Rect.Empty,
         BitmapSizeOptions.FromEmptyOptions()
       );
+
       bitmap.Freeze();
       return bitmap;
     }
@@ -135,8 +145,10 @@ public class IconService : IIconService
     public IntPtr hIcon;
     public int iIcon;
     public uint dwAttributes;
+
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
     public string szDisplayName;
+
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
     public string szTypeName;
   }

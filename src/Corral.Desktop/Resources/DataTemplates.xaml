@@ -8,14 +8,14 @@
   xmlns:behaviors="clr-namespace:Corral.Desktop.Behaviors">
 
   <ResourceDictionary.MergedDictionaries>
-    <ResourceDictionary Source="Brushes.xaml"/>
-    <ResourceDictionary Source="Styles.xaml"/>
+    <ResourceDictionary Source="Brushes.xaml" />
+    <ResourceDictionary Source="Styles.xaml" />
   </ResourceDictionary.MergedDictionaries>
 
   <!-- Converter Registration -->
-  <converters:StringToColorConverter x:Key="StringToColorConverter"/>
-  <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
-  <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+  <converters:StringToColorConverter x:Key="StringToColorConverter" />
+  <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+  <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
   <!-- Context Menu for Zone Card -->
   <ContextMenu x:Key="ZoneCardContextMenu">
@@ -26,7 +26,7 @@
         <iconPacks:PackIconMaterial Kind="Delete"
                                     Width="12"
                                     Height="12"
-                                    Foreground="{StaticResource BrushTextSecondary}"/>
+                                    Foreground="{StaticResource BrushTextSecondary}" />
       </MenuItem.Icon>
     </MenuItem>
   </ContextMenu>
@@ -42,18 +42,18 @@
       behaviors:DropBehavior.DragOverHighlight="#1AFFFFFF">
       <Grid>
         <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Top Header (Title + Toggle) -->
         <Grid Grid.Row="0"
               Margin="0,0,0,8">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
 
           <TextBlock
@@ -63,14 +63,14 @@
             FontWeight="Bold"
             Foreground="{StaticResource BrushTextPrimary}"
             VerticalAlignment="Center"
-            TextTrimming="CharacterEllipsis"/>
+            TextTrimming="CharacterEllipsis" />
 
           <!-- Real Toggle Switch -->
           <ToggleButton Grid.Column="1"
                         Style="{StaticResource ToggleSwitchStyle}"
                         IsChecked="{Binding IsActive}"
                         Tag="{Binding Color, Converter={StaticResource StringToColorConverter}}"
-                        VerticalAlignment="Center"/>
+                        VerticalAlignment="Center" />
         </Grid>
 
         <!-- Status Indicator -->
@@ -81,14 +81,14 @@
                    Width="6"
                    Height="6"
                    Fill="{StaticResource BrushTextSecondary}"
-                   VerticalAlignment="Center"/>
+                   VerticalAlignment="Center" />
           <TextBlock x:Name="StatusText"
                      Text="STANDBY"
                      FontSize="10"
                      FontWeight="Bold"
                      Foreground="{StaticResource BrushTextSecondary}"
                      Margin="8,0,0,0"
-                     VerticalAlignment="Center"/>
+                     VerticalAlignment="Center" />
         </StackPanel>
 
         <!-- Items List or Empty Placeholder — also acts as the drop target -->
@@ -107,12 +107,12 @@
                                           Foreground="{Binding Color, Converter={StaticResource StringToColorConverter}}"
                                           Width="24"
                                           Height="24"
-                                          HorizontalAlignment="Center"/>
+                                          HorizontalAlignment="Center" />
               <TextBlock Text="DROP FILES HERE"
                          FontSize="9"
                          Foreground="{StaticResource BrushTextTertiary}"
                          HorizontalAlignment="Center"
-                         Margin="0,6,0,0"/>
+                         Margin="0,6,0,0" />
             </StackPanel>
             <!-- Items list -->
             <ItemsControl ItemsSource="{Binding Items}"
@@ -125,12 +125,12 @@
                            Width="16"
                            Height="16"
                            VerticalAlignment="Center"
-                           Margin="0,0,6,0"/>
+                           Margin="0,0,6,0" />
                     <TextBlock Text="{Binding DisplayName}"
                                FontSize="11"
                                Foreground="{StaticResource BrushTextPrimary}"
                                TextTrimming="CharacterEllipsis"
-                               VerticalAlignment="Center"/>
+                               VerticalAlignment="Center" />
                   </StackPanel>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
@@ -141,8 +141,8 @@
         <!-- Bottom Actions -->
         <Grid Grid.Row="3">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
 
           <Button Grid.Column="0"
@@ -155,12 +155,12 @@
                                           Height="12"
                                           Foreground="{StaticResource BrushTextSecondary}"
                                           VerticalAlignment="Center"
-                                          Margin="0,0,8,0"/>
+                                          Margin="0,0,8,0" />
               <TextBlock Text="EDIT ZONE"
                          FontSize="10"
                          FontWeight="Bold"
                          Foreground="{StaticResource BrushTextSecondary}"
-                         VerticalAlignment="Center"/>
+                         VerticalAlignment="Center" />
             </StackPanel>
           </Button>
 
@@ -174,12 +174,12 @@
                                           Height="12"
                                           Foreground="{StaticResource BrushTextSecondary}"
                                           VerticalAlignment="Center"
-                                          Margin="0,0,8,0"/>
+                                          Margin="0,0,8,0" />
               <TextBlock Text="DELETE"
                          FontSize="10"
                          FontWeight="Bold"
                          Foreground="{StaticResource BrushTextSecondary}"
-                         VerticalAlignment="Center"/>
+                         VerticalAlignment="Center" />
             </StackPanel>
           </Button>
         </Grid>
@@ -188,16 +188,16 @@
     </Border>
     <DataTemplate.Triggers>
       <DataTrigger Binding="{Binding IsActive}"
-          Value="True">
+                   Value="True">
         <Setter TargetName="StatusDot"
-            Property="Fill"
-            Value="{Binding Color, Converter={StaticResource StringToColorConverter}}"/>
+                Property="Fill"
+                Value="{Binding Color, Converter={StaticResource StringToColorConverter}}" />
         <Setter TargetName="StatusText"
-            Property="Foreground"
-            Value="{Binding Color, Converter={StaticResource StringToColorConverter}}"/>
+                Property="Foreground"
+                Value="{Binding Color, Converter={StaticResource StringToColorConverter}}" />
         <Setter TargetName="StatusText"
-            Property="Text"
-            Value="ACTIVE"/>
+                Property="Text"
+                Value="ACTIVE" />
       </DataTrigger>
     </DataTemplate.Triggers>
   </DataTemplate>

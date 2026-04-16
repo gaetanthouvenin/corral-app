@@ -13,6 +13,8 @@ using Corral.Infrastructure.Persistence;
 using Corral.Infrastructure.Persistence.Entities;
 using Corral.Infrastructure.Repositories;
 
+#pragma warning disable CS9264 // Non-nullable property must contain a non-null value — field keyword initializer
+
 namespace Corral.Infrastructure.UnitOfWork;
 
 /// <summary>
@@ -32,6 +34,11 @@ public class UnitOfWork(
   ///   Gets the repository for managing fences.
   /// </summary>
   public IFenceRepository Fences => field ??= new FenceRepository(dbContext, fenceMapper);
+
+  /// <summary>
+  ///   Gets the repository for managing user settings.
+  /// </summary>
+  public IUserSettingsRepository UserSettings => field ??= new UserSettingsRepository(dbContext);
 
   #endregion
 

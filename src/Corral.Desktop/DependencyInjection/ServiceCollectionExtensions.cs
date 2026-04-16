@@ -35,17 +35,22 @@ public static class ServiceCollectionExtensions
     services.AddSingleton<IOverlayService, OverlayService>();
     services.AddSingleton<ITrayIconService, TrayIconService>();
     services.AddSingleton<IIconService, IconService>();
+    services.AddSingleton<IUserPreferencesService, UserPreferencesService>();
 
     // Register mappers
     services.AddScoped<IMapper<Fence, FenceViewModel>, FenceToViewModelMapper>();
 
     // Register view models
     services.AddScoped<MainWindowViewModel>();
+    services.AddScoped<ZonesViewModel>();
+    services.AddTransient<SettingsViewModel>();
     services.AddTransient<CreateZoneDialogViewModel>();
     services.AddTransient<EditZoneDialogViewModel>();
 
-    // Register windows with dependency injection
+    // Register windows and views with dependency injection
     services.AddScoped<MainWindow>();
+    services.AddScoped<ZonesView>();
+    services.AddTransient<SettingsView>();
     services.AddTransient<CreateZoneDialog>();
     services.AddTransient<EditZoneDialog>();
 

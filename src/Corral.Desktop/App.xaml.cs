@@ -230,9 +230,10 @@ public partial class App : System.Windows.Application
   {
     _ = Dispatcher.BeginInvoke(() =>
                                {
-                                 if (MainWindow?.DataContext is MainWindowViewModel mainVm)
+                                 if (MainWindow?.DataContext is MainWindowViewModel mainVm
+                                     && mainVm.CurrentViewModel is ZonesViewModel zonesVm)
                                  {
-                                   mainVm.ToggleOverlaysCommand.Execute(null);
+                                   zonesVm.ToggleOverlaysCommand.Execute(null);
                                  }
                                }
     );
@@ -260,16 +261,17 @@ public partial class App : System.Windows.Application
   ///   Handles the event triggered when the floating create button requests the creation of a new zone.
   /// </summary>
   /// <remarks>
-  ///   This method invokes the <see cref="MainWindowViewModel.CreateNewZoneCommand" /> command
+  ///   This method invokes the <see cref="ZonesViewModel.CreateNewZoneCommand" /> command
   ///   to initiate the creation of a new virtual desktop zone.
   /// </remarks>
   private void OnFloatingCreateRequested()
   {
     _ = Dispatcher.BeginInvoke(() =>
                                {
-                                 if (MainWindow?.DataContext is MainWindowViewModel mainVm)
+                                 if (MainWindow?.DataContext is MainWindowViewModel mainVm
+                                     && mainVm.CurrentViewModel is ZonesViewModel zonesVm)
                                  {
-                                   mainVm.CreateNewZoneCommand.Execute(null);
+                                   zonesVm.CreateNewZoneCommand.Execute(null);
                                  }
                                }
     );

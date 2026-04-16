@@ -34,7 +34,9 @@
       "Bash(sqlite3 Corral.db \"SELECT Id, Name, BackgroundColor, Opacity FROM Fences;\")",
       "Bash(pkill -f \"dotnet run\")",
       "Bash(dotnet script:*)",
-      "Bash(dotnet add:*)"
+      "Bash(dotnet add:*)",
+      "Bash(grep -n \"SettingsView\\\\|IsSettingsVisible\" C:\\\\\\\\Users\\\\\\\\gatan\\\\\\\\Sources\\\\\\\\GitHub\\\\\\\\corral-app\\\\\\\\src\\\\\\\\Corral.Desktop\\\\\\\\MainWindow.xaml)",
+      "Bash(xargs cat *)"
     ]
   }
 }

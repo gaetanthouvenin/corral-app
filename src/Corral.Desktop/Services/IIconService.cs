@@ -3,7 +3,6 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-
 using System.Windows.Media;
 
 namespace Corral.Desktop.Services;
@@ -22,7 +21,10 @@ public interface IIconService
   ///   cached by <paramref name="path" /> for the lifetime of the service.
   /// </summary>
   /// <param name="path">Absolute file path, shortcut path, or URL.</param>
-  /// <returns>An <see cref="ImageSource" /> that can be bound to an <c>Image</c> control, or <c>null</c>.</returns>
+  /// <returns>
+  ///   An <see cref="ImageSource" /> that can be bound to an <c>Image</c> control, or <c>null</c>
+  ///   .
+  /// </returns>
   ImageSource GetIcon(string path);
 
   #endregion

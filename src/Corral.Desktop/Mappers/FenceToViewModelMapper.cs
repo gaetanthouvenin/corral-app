@@ -26,8 +26,10 @@ namespace Corral.Desktop.Mappers;
 ///   simpler types (e.g., integers, strings, doubles). This approach maintains
 ///   separation of concerns between the domain and presentation layers.
 /// </remarks>
-public class FenceToViewModelMapper(IDialogService dialogService, IMediator mediator, IIconService iconService)
-  : IMapper<Fence, FenceViewModel>
+public class FenceToViewModelMapper(
+  IDialogService dialogService,
+  IMediator mediator,
+  IIconService iconService) : IMapper<Fence, FenceViewModel>
 {
   #region Implementation of IMapper<Fence,FenceViewModel>
 

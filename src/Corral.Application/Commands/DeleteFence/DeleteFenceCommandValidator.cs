@@ -3,7 +3,6 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-
 using FluentValidation;
 
 namespace Corral.Application.Commands.DeleteFence;
@@ -21,12 +20,10 @@ public class DeleteFenceCommandValidator : AbstractValidator<DeleteFenceCommand>
   /// </summary>
   public DeleteFenceCommandValidator()
   {
-    RuleFor(cmd => cmd.FenceId)
-      .NotEmpty()
-      .WithMessage("Fence ID is required");
+    RuleFor(cmd => cmd.FenceId).NotEmpty().WithMessage("Fence ID is required");
 
     RuleFor(cmd => cmd.FenceId)
-      .Must(id => Guid.TryParse(id, out _))
+      .Must(id => Guid.TryParse(id, out var _))
       .When(cmd => !string.IsNullOrEmpty(cmd.FenceId))
       .WithMessage("Fence ID must be a valid GUID");
   }

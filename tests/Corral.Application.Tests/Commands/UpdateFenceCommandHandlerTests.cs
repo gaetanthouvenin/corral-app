@@ -79,6 +79,7 @@ public class UpdateFenceCommandHandlerTests
       r => r.UpdateAsync(It.IsAny<Fence>(), It.IsAny<CancellationToken>()),
       Times.Once
     );
+
     _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
   }
 

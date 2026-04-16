@@ -4,8 +4,6 @@
 // </copyright>
 // ------------------------------------------------------------------------------------------------
 
-using System.Drawing.Drawing2D;
-
 using Microsoft.Extensions.Logging;
 
 namespace Corral.Desktop.Services;

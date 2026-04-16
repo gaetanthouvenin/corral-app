@@ -1,40 +1,46 @@
 // ------------------------------------------------------------------------------------------------
-// <copyright file="BoolToVisibilityConverter.cs" company="Gaëtan THOUVENIN">
+// <copyright file="ViewModelTypeConverter.cs" company="Gaëtan THOUVENIN">
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
+
+using Corral.Desktop.ViewModels;
+
+using Binding = System.Windows.Data.Binding;
 
 namespace Corral.Desktop.Converters;
 
 /// <summary>
-///   Converter qui transforme un bool ou int en Visibility. True/non-zero → Visible, False/zero →
-///   Collapsed.
-///   Passer "Invert" comme ConverterParameter pour inverser le comportement.
+///   Converts a ViewModel instance to a string representing its type for UI logic.
 /// </summary>
-[ValueConversion(typeof(bool), typeof(Visibility))]
-public class BoolToVisibilityConverter : IValueConverter
+[ValueConversion(typeof(object), typeof(bool))]
+public class ViewModelTypeConverter : IValueConverter
 {
   #region Implementation of IValueConverter
 
   public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
   {
-    var boolValue = value switch
+    if (value == null || parameter == null)
     {
-      bool b => b,
-      int i => i != 0,
+      return false;
+    }
+
+    var parameterString = parameter.ToString();
+
+    return parameterString switch
+    {
+      "Zones" => value is ZonesViewModel,
+      "Settings" => value is SettingsViewModel,
       var _ => false
     };
-
-    var invert = parameter is string p && p == "Invert";
-    return boolValue ^ invert ? Visibility.Visible : Visibility.Collapsed;
   }
 
   public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
   {
-    throw new NotSupportedException();
+    return Binding.DoNothing;
   }
 
   #endregion

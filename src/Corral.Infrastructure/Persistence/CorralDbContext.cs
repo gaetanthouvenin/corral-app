@@ -29,6 +29,11 @@ public class CorralDbContext(DbContextOptions<CorralDbContext> options) : DbCont
   /// </summary>
   public DbSet<FenceItemEntity> FenceItems { get; set; }
 
+  /// <summary>
+  ///   Gets or sets the DbSet for the singleton UserSettings row.
+  /// </summary>
+  public DbSet<UserSettingsEntity> UserSettings { get; set; }
+
   #endregion
 
   #region Methods
@@ -75,6 +80,18 @@ public class CorralDbContext(DbContextOptions<CorralDbContext> options) : DbCont
                                        // Set table name
                                        entity.ToTable("Fences");
                                      }
+    );
+
+    // Configure UserSettings entity (singleton row)
+    modelBuilder.Entity<UserSettingsEntity>(entity =>
+                                            {
+                                              entity.HasKey(u => u.Id);
+                                              entity.Property(u => u.Id).ValueGeneratedNever();
+                                              entity.Property(u => u.ClickMode).HasDefaultValue(0);
+                                              entity.Property(u => u.IconLayout).HasDefaultValue(0);
+                                              entity.Property(u => u.UpdatedAt).IsRequired();
+                                              entity.ToTable("UserSettings");
+                                            }
     );
 
     // Configure FenceItem entity

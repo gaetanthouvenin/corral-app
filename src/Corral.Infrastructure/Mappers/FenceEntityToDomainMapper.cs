@@ -53,7 +53,7 @@ public class FenceEntityToDomainMapper : IMapper<FenceEntity, Fence>
     );
 
     // Load items if present
-    if (entity.Items != null && entity.Items.Count > 0)
+    if (entity.Items is { Count: > 0 })
     {
       var items = entity.Items.Select(i => FenceItem.Reconstitute(
                                         i.Id,

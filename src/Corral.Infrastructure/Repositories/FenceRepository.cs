@@ -113,7 +113,7 @@ public class FenceRepository(CorralDbContext dbContext, IMapper<FenceEntity, Fen
                                   .Include(f => f.Items)
                                   .ToListAsync(cancellationToken);
 
-    return entities.ConvertAll(e => mapper.Map(e));
+    return entities.ConvertAll(mapper.Map);
   }
 
   /// <summary>
@@ -131,7 +131,7 @@ public class FenceRepository(CorralDbContext dbContext, IMapper<FenceEntity, Fen
                                   .Where(f => f.IsActive)
                                   .ToListAsync(cancellationToken);
 
-    return entities.ConvertAll(e => mapper.Map(e));
+    return entities.ConvertAll(mapper.Map);
   }
 
   public async Task<List<Fence>> SearchByNameAsync(
@@ -145,7 +145,7 @@ public class FenceRepository(CorralDbContext dbContext, IMapper<FenceEntity, Fen
                                   .Where(f => f.Name.ToLower().Contains(lower))
                                   .ToListAsync(cancellationToken);
 
-    return entities.ConvertAll(e => mapper.Map(e));
+    return entities.ConvertAll(mapper.Map);
   }
 
   /// <summary>
@@ -184,15 +184,10 @@ public class FenceRepository(CorralDbContext dbContext, IMapper<FenceEntity, Fen
   {
     var incoming = MapFenceToDomainEntity(fence);
 
-    var existing = await dbContext.Fences
-                                  .Include(f => f.Items)
-                                  .FirstOrDefaultAsync(
-                                    f => f.Id == incoming.Id,
-                                    cancellationToken
-                                  )
-                    ?? throw new InvalidOperationException(
-                      $"Fence with ID '{incoming.Id}' not found"
-                    );
+    var existing =
+      await dbContext.Fences.Include(f => f.Items)
+                     .FirstOrDefaultAsync(f => f.Id == incoming.Id, cancellationToken)
+      ?? throw new InvalidOperationException($"Fence with ID '{incoming.Id}' not found");
 
     // Sync scalar properties
     existing.Name = incoming.Name;

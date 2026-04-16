@@ -25,6 +25,11 @@ public interface IUnitOfWork : IAsyncDisposable
   /// </summary>
   IFenceRepository Fences { get; }
 
+  /// <summary>
+  ///   Gets the repository for the singleton UserSettings aggregate.
+  /// </summary>
+  IUserSettingsRepository UserSettings { get; }
+
   #endregion
 
   #region Methods

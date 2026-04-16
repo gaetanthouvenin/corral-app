@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -21,6 +22,12 @@ public partial class FenceItemViewModel : ObservableObject
   /// </summary>
   [ObservableProperty]
   private string _displayName = string.Empty;
+
+  /// <summary>
+  ///   Shell-resolved icon (shortcut target, file association, etc.). Bound to the UI.
+  /// </summary>
+  [ObservableProperty]
+  private ImageSource _icon;
 
   /// <summary>
   ///   Unique identifier of the element.
@@ -45,12 +52,6 @@ public partial class FenceItemViewModel : ObservableObject
   /// </summary>
   [ObservableProperty]
   private int _sortOrder;
-
-  /// <summary>
-  ///   Shell-resolved icon (shortcut target, file association, etc.). Bound to the UI.
-  /// </summary>
-  [ObservableProperty]
-  private ImageSource _icon;
 
   #endregion
 }

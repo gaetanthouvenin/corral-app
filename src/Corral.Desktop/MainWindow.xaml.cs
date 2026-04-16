@@ -26,10 +26,17 @@ public sealed partial class MainWindow
   ///   Initializes a new instance of the MainWindow class with dependency injection.
   /// </summary>
   /// <param name="viewModel">The MainWindowViewModel injected via DI.</param>
-  public MainWindow(MainWindowViewModel viewModel)
+  /// <param name="settingsViewModel">The SettingsViewModel injected via DI.</param>
+  public MainWindow(MainWindowViewModel viewModel, SettingsViewModel settingsViewModel)
   {
     InitializeComponent();
     DataContext = viewModel;
+
+    // Initialize settings view model (fire-and-forget — runs on UI thread)
+    _ = settingsViewModel.Initialize();
+
+    // Store settings VM in resources for binding
+    Resources["SettingsVM"] = settingsViewModel;
   }
 
   #endregion

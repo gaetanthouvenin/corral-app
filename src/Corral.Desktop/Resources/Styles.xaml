@@ -207,6 +207,42 @@
   </Style>
 
   <!-- ============================================
+       ICON OPTION RADIO BUTTON (Settings)
+       ============================================ -->
+  <Style x:Key="RadioButtonIconOption" TargetType="RadioButton">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{StaticResource BrushTextSecondary}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Border x:Name="Bd"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{StaticResource BrushBorder}"
+                  BorderThickness="1"
+                  CornerRadius="8"
+                  Padding="16,12">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Bd" Property="Background"
+                      Value="{StaticResource BrushSurfaceVariant}" />
+              <Setter TargetName="Bd" Property="BorderBrush"
+                      Value="{StaticResource BrushTextSecondary}" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="Bd" Property="Background" Value="#1A0078D4" />
+              <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource BrushAccent}" />
+              <Setter Property="Foreground" Value="{StaticResource BrushAccent}" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- ============================================
        TOGGLE SWITCH STYLE
        ============================================ -->
   <Style x:Key="ToggleSwitchStyle" TargetType="ToggleButton">
@@ -231,7 +267,8 @@
           </Border>
           <ControlTemplate.Triggers>
             <Trigger Property="IsChecked" Value="True">
-              <Setter TargetName="Border" Property="Background" Value="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+              <Setter TargetName="Border" Property="Background"
+                      Value="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" />
               <Setter TargetName="Knob" Property="HorizontalAlignment" Value="Right" />
             </Trigger>
           </ControlTemplate.Triggers>
