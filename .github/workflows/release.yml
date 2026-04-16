@@ -20,12 +20,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          global-json-file: global.json
+          dotnet-version: "10.0.x"
 
       - name: Determine version
         id: version
@@ -75,7 +75,7 @@ jobs:
         #   SIGNING_CERT_PASSWORD   : mot de passe du PFX
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Corral-${{ steps.version.outputs.semver }}-msix
           path: artifacts/Corral-${{ steps.version.outputs.semver }}.msix
@@ -83,7 +83,7 @@ jobs:
 
       - name: Create GitHub Release (draft)
         if: github.ref_type == 'tag'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: Corral v${{ steps.version.outputs.semver }}
           draft: true
