@@ -15,6 +15,7 @@
       **/*Dto.cs;
       **/*Dto.*;
       **/*Mapping*.cs;
+      **/Migrations/*.cs;
       **/*.g.cs
     </ExcludeByFile>
 

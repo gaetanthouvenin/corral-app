@@ -64,5 +64,45 @@ public class UnitOfWorkTests
     await unitOfWork.RollbackTransactionAsync(TestContext.Current.CancellationToken);
   }
 
+  [Fact]
+  public void UserSettings_ShouldCacheRepositoryInstance()
+  {
+    using var database = new SqliteInMemoryDatabase();
+    using var dbContext = database.CreateDbContext();
+    var unitOfWork = new UnitOfWorkImpl(dbContext, _mapper);
+
+    var firstRepository = unitOfWork.UserSettings;
+    var secondRepository = unitOfWork.UserSettings;
+
+    firstRepository.ShouldBeSameAs(secondRepository);
+  }
+
+  [Fact]
+  public async Task CommitTransactionAsync_ShouldPersistPendingChanges()
+  {
+    await using var database = new SqliteInMemoryDatabase();
+    await using var dbContext = database.CreateDbContext();
+    var unitOfWork = new UnitOfWorkImpl(dbContext, _mapper);
+
+    await unitOfWork.BeginTransactionAsync(TestContext.Current.CancellationToken);
+    unitOfWork.Fences.Add(FenceTestData.CreateFence());
+
+    await unitOfWork.CommitTransactionAsync(TestContext.Current.CancellationToken);
+
+    (await dbContext.Fences.CountAsync(TestContext.Current.CancellationToken)).ShouldBe(1);
+  }
+
+  [Fact]
+  public async Task DisposeAsync_ShouldDisposeDbContext()
+  {
+    await using var database = new SqliteInMemoryDatabase();
+    var dbContext = database.CreateDbContext();
+    var unitOfWork = new UnitOfWorkImpl(dbContext, _mapper);
+
+    await unitOfWork.DisposeAsync();
+
+    await Should.ThrowAsync<ObjectDisposedException>(() => dbContext.Fences.CountAsync());
+  }
+
   #endregion
 }
