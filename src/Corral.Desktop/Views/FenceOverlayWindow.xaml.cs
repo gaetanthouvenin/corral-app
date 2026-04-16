@@ -6,7 +6,6 @@
 
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -14,10 +13,15 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
+using Corral.Desktop.Behaviors;
 using Corral.Desktop.Controls;
+using Corral.Desktop.Localization;
 using Corral.Desktop.Models;
 using Corral.Desktop.ViewModels;
 
+using Microsoft.Win32;
+
+using Binding = System.Windows.Data.Binding;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using ClickMode = Corral.Desktop.Models.ClickMode;
@@ -27,6 +31,7 @@ using DragDeltaEventArgs = System.Windows.Controls.Primitives.DragDeltaEventArgs
 using DragStartedEventArgs = System.Windows.Controls.Primitives.DragStartedEventArgs;
 using MenuItem = System.Windows.Controls.MenuItem;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using Orientation = System.Windows.Controls.Orientation;
 using Point = System.Windows.Point;
 
@@ -38,6 +43,30 @@ namespace Corral.Desktop.Views;
 /// </summary>
 public partial class FenceOverlayWindow
 {
+  #region Dependencies
+
+  #region Helpers
+
+  private static T FindAncestor<T>(DependencyObject obj)
+    where T : DependencyObject
+  {
+    while (obj != null)
+    {
+      if (obj is T ancestor)
+      {
+        return ancestor;
+      }
+
+      obj = VisualTreeHelper.GetParent(obj);
+    }
+
+    return null;
+  }
+
+  #endregion
+
+  #endregion
+
   #region Fields
 
   private const int DoubleClickTimeMs = 300;
@@ -74,20 +103,6 @@ public partial class FenceOverlayWindow
   #endregion
 
   #region Methods
-
-  #region Events
-
-  /// <summary>
-  ///   Raised when the user finishes dragging the overlay to a new position.
-  /// </summary>
-  public event Action<int, int> PositionChanged;
-
-  /// <summary>
-  ///   Raised when the user finishes resizing the overlay to new dimensions.
-  /// </summary>
-  public event Action<int, int> DimensionsChanged;
-
-  #endregion
 
   /// <summary>
   ///   Sets the ViewModel as DataContext so <see cref="ItemsPanel" /> and commands bind to it.
@@ -202,10 +217,7 @@ public partial class FenceOverlayWindow
     }
 
     // Restaure le binding (le recycle null/source brisait le binding XAML {Binding Items})
-    ItemsPanel.SetBinding(
-      ItemsControl.ItemsSourceProperty,
-      new System.Windows.Data.Binding("Items")
-    );
+    ItemsPanel.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("Items"));
   }
 
   /// <summary>
@@ -237,13 +249,13 @@ public partial class FenceOverlayWindow
 
     var menu = new ContextMenu { Style = menuStyle };
 
-    var programItem = new MenuItem { Header = "Programme...", Style = itemStyle };
+    var programItem = new MenuItem { Header = Strings.Overlay_AddProgram, Style = itemStyle };
     programItem.Click += (_, _) => BrowseAndAddFire(vm, BrowseMode.Program);
 
-    var fileItem = new MenuItem { Header = "Fichier...", Style = itemStyle };
+    var fileItem = new MenuItem { Header = Strings.Overlay_AddFile, Style = itemStyle };
     fileItem.Click += (_, _) => BrowseAndAddFire(vm, BrowseMode.File);
 
-    var folderItem = new MenuItem { Header = "Dossier...", Style = itemStyle };
+    var folderItem = new MenuItem { Header = Strings.Overlay_AddFolder, Style = itemStyle };
     folderItem.Click += (_, _) => BrowseAndAddFire(vm, BrowseMode.Folder);
 
     menu.Items.Add(programItem);
@@ -251,7 +263,7 @@ public partial class FenceOverlayWindow
     menu.Items.Add(folderItem);
 
     menu.PlacementTarget = (UIElement)sender;
-    menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+    menu.Placement = PlacementMode.Bottom;
     menu.IsOpen = true;
 
     e.Handled = true;
@@ -270,10 +282,7 @@ public partial class FenceOverlayWindow
 
     if (mode == BrowseMode.Folder)
     {
-      var dialog = new Microsoft.Win32.OpenFolderDialog
-      {
-        Title = "Sélectionner un dossier"
-      };
+      var dialog = new OpenFolderDialog { Title = Strings.Overlay_BrowseFolder };
 
       if (dialog.ShowDialog() == true)
       {
@@ -282,12 +291,13 @@ public partial class FenceOverlayWindow
     }
     else
     {
-      var dialog = new Microsoft.Win32.OpenFileDialog
+      var dialog = new OpenFileDialog
       {
-        Title = mode == BrowseMode.Program ? "Sélectionner un programme" : "Sélectionner un fichier",
+        Title =
+          mode == BrowseMode.Program ? Strings.Overlay_BrowseProgram : Strings.Overlay_BrowseFile,
         Filter = mode == BrowseMode.Program
-          ? "Programmes|*.exe;*.lnk;*.bat;*.cmd|Tous les fichiers|*.*"
-          : "Tous les fichiers|*.*"
+                   ? $"{Strings.Overlay_FilterPrograms}|*.exe;*.lnk;*.bat;*.cmd|{Strings.Overlay_FilterAllFiles}|*.*"
+                   : $"{Strings.Overlay_FilterAllFiles}|*.*"
       };
 
       if (dialog.ShowDialog() == true)
@@ -302,14 +312,8 @@ public partial class FenceOverlayWindow
     }
   }
 
-  private enum BrowseMode
+  private void OnResizeThumbDragStarted(object sender, DragStartedEventArgs e)
   {
-    Program,
-    File,
-    Folder,
-  }
-
-  private void OnResizeThumbDragStarted(object sender, DragStartedEventArgs e)  {
     _isResizing = true;
     _resizeStartLeft = Left;
     _resizeStartTop = Top;
@@ -421,7 +425,7 @@ public partial class FenceOverlayWindow
 
     // Find parent ItemsControl to check if we're dragging an item
     var itemsControl = FindAncestor<ItemsControl>(sender as DependencyObject);
-    if (itemsControl != null && Corral.Desktop.Behaviors.ReorderItemsBehavior.IsItemsControlDraggingItem(itemsControl))
+    if (itemsControl != null && ReorderItemsBehavior.IsItemsControlDraggingItem(itemsControl))
     {
       return; // Don't open items during drag-and-drop
     }
@@ -474,9 +478,7 @@ public partial class FenceOverlayWindow
     {
       var processInfo = new ProcessStartInfo
       {
-        FileName = item.Path,
-        UseShellExecute = true,
-        CreateNoWindow = true
+        FileName = item.Path, UseShellExecute = true, CreateNoWindow = true
       };
 
       Process.Start(processInfo);
@@ -491,22 +493,24 @@ public partial class FenceOverlayWindow
 
   #endregion
 
-  #region Helpers
-
-  private static T FindAncestor<T>(DependencyObject obj) where T : DependencyObject
+  private enum BrowseMode
   {
-    while (obj != null)
-    {
-      if (obj is T ancestor)
-      {
-        return ancestor;
-      }
-
-      obj = VisualTreeHelper.GetParent(obj);
-    }
-
-    return null;
+    Program,
+    File,
+    Folder,
   }
+
+  #region Events
+
+  /// <summary>
+  ///   Raised when the user finishes dragging the overlay to a new position.
+  /// </summary>
+  public event Action<int, int> PositionChanged;
+
+  /// <summary>
+  ///   Raised when the user finishes resizing the overlay to new dimensions.
+  /// </summary>
+  public event Action<int, int> DimensionsChanged;
 
   #endregion
 

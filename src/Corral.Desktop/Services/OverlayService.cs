@@ -6,7 +6,6 @@
 
 using Corral.Application.Commands.MoveFence;
 using Corral.Application.Commands.ResizeFence;
-using Corral.Desktop.Models;
 using Corral.Desktop.ViewModels;
 using Corral.Desktop.Views;
 
@@ -39,84 +38,6 @@ public class OverlayService(
 
   #endregion
 
-  #region Methods
-
-#pragma warning disable VSTHRD001, VSTHRD110
-  private void OnOverlayPositionChanged(string fenceId, int newX, int newY)
-  {
-    logger.LogDebug("Fence {FenceId} moved to ({X}, {Y})", fenceId, newX, newY);
-    System.Windows.Application.Current.Dispatcher.BeginInvoke(async () =>
-                                                              {
-                                                                try
-                                                                {
-                                                                  using var scope =
-                                                                    serviceProvider.CreateScope();
-
-                                                                  var mediator =
-                                                                    scope.ServiceProvider
-                                                                      .GetRequiredService<
-                                                                        IMediator>();
-
-                                                                  var command =
-                                                                    new MoveFenceCommand(
-                                                                      fenceId,
-                                                                      newX,
-                                                                      newY
-                                                                    );
-
-                                                                  await mediator.Send(command);
-                                                                }
-                                                                catch (Exception ex)
-                                                                {
-                                                                  logger.LogError(
-                                                                    ex,
-                                                                    "Failed to persist fence position for {FenceId}",
-                                                                    fenceId
-                                                                  );
-                                                                }
-                                                              }
-    );
-  }
-
-  private void OnOverlayDimensionsChanged(string fenceId, int newWidth, int newHeight)
-  {
-    logger.LogDebug("Fence {FenceId} resized to ({Width}x{Height})", fenceId, newWidth, newHeight);
-    System.Windows.Application.Current.Dispatcher.BeginInvoke(async () =>
-                                                              {
-                                                                try
-                                                                {
-                                                                  using var scope =
-                                                                    serviceProvider.CreateScope();
-
-                                                                  var mediator =
-                                                                    scope.ServiceProvider
-                                                                      .GetRequiredService<
-                                                                        IMediator>();
-
-                                                                  var command =
-                                                                    new ResizeFenceCommand(
-                                                                      fenceId,
-                                                                      newWidth,
-                                                                      newHeight
-                                                                    );
-
-                                                                  await mediator.Send(command);
-                                                                }
-                                                                catch (Exception ex)
-                                                                {
-                                                                  logger.LogError(
-                                                                    ex,
-                                                                    "Failed to persist fence dimensions for {FenceId}",
-                                                                    fenceId
-                                                                  );
-                                                                }
-                                                              }
-    );
-  }
-#pragma warning restore VSTHRD001, VSTHRD110
-
-  #endregion
-
   #region Implementation of IOverlayService
 
   /// <inheritdoc />
@@ -146,7 +67,8 @@ public class OverlayService(
 
     var fenceId = fence.Id;
     overlay.PositionChanged += (newX, newY) => OnOverlayPositionChanged(fenceId, newX, newY);
-    overlay.DimensionsChanged += (newWidth, newHeight) => OnOverlayDimensionsChanged(fenceId, newWidth, newHeight);
+    overlay.DimensionsChanged += (newWidth, newHeight)
+                                   => OnOverlayDimensionsChanged(fenceId, newWidth, newHeight);
 
     _overlays[fence.Id] = overlay;
     overlay.Show();
@@ -230,4 +152,78 @@ public class OverlayService(
   }
 
   #endregion
+
+#pragma warning disable VSTHRD001, VSTHRD110
+  private void OnOverlayPositionChanged(string fenceId, int newX, int newY)
+  {
+    logger.LogDebug("Fence {FenceId} moved to ({X}, {Y})", fenceId, newX, newY);
+    System.Windows.Application.Current.Dispatcher.BeginInvoke(async () =>
+                                                              {
+                                                                try
+                                                                {
+                                                                  using var scope =
+                                                                    serviceProvider.CreateScope();
+
+                                                                  var mediator =
+                                                                    scope.ServiceProvider
+                                                                      .GetRequiredService<
+                                                                        IMediator>();
+
+                                                                  var command =
+                                                                    new MoveFenceCommand(
+                                                                      fenceId,
+                                                                      newX,
+                                                                      newY
+                                                                    );
+
+                                                                  await mediator.Send(command);
+                                                                }
+                                                                catch (Exception ex)
+                                                                {
+                                                                  logger.LogError(
+                                                                    ex,
+                                                                    "Failed to persist fence position for {FenceId}",
+                                                                    fenceId
+                                                                  );
+                                                                }
+                                                              }
+    );
+  }
+
+  private void OnOverlayDimensionsChanged(string fenceId, int newWidth, int newHeight)
+  {
+    logger.LogDebug("Fence {FenceId} resized to ({Width}x{Height})", fenceId, newWidth, newHeight);
+    System.Windows.Application.Current.Dispatcher.BeginInvoke(async () =>
+                                                              {
+                                                                try
+                                                                {
+                                                                  using var scope =
+                                                                    serviceProvider.CreateScope();
+
+                                                                  var mediator =
+                                                                    scope.ServiceProvider
+                                                                      .GetRequiredService<
+                                                                        IMediator>();
+
+                                                                  var command =
+                                                                    new ResizeFenceCommand(
+                                                                      fenceId,
+                                                                      newWidth,
+                                                                      newHeight
+                                                                    );
+
+                                                                  await mediator.Send(command);
+                                                                }
+                                                                catch (Exception ex)
+                                                                {
+                                                                  logger.LogError(
+                                                                    ex,
+                                                                    "Failed to persist fence dimensions for {FenceId}",
+                                                                    fenceId
+                                                                  );
+                                                                }
+                                                              }
+    );
+  }
+#pragma warning restore VSTHRD001, VSTHRD110
 }

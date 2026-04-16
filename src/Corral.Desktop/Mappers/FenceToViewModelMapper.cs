@@ -61,16 +61,17 @@ public class FenceToViewModelMapper(
       CreatedAt = fence.CreatedAt,
       UpdatedAt = fence.UpdatedAt ?? DateTime.UtcNow,
       Items = new ObservableCollection<FenceItemViewModel>(
-        fence.Items.OrderBy(i => i.SortOrder).Select(i => new FenceItemViewModel
-          {
-            Id = i.Id,
-            DisplayName = i.DisplayName,
-            Path = i.Path,
-            ItemType = (int)i.ItemType,
-            SortOrder = i.SortOrder,
-            Icon = iconService.GetIcon(i.Path)
-          }
-        )
+        fence.Items.OrderBy(i => i.SortOrder)
+             .Select(i => new FenceItemViewModel
+               {
+                 Id = i.Id,
+                 DisplayName = i.DisplayName,
+                 Path = i.Path,
+                 ItemType = (int)i.ItemType,
+                 SortOrder = i.SortOrder,
+                 Icon = iconService.GetIcon(i.Path)
+               }
+             )
       )
     };
   }

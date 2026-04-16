@@ -17,8 +17,7 @@ namespace Corral.Desktop.ViewModels;
 /// </summary>
 public partial class SettingsViewModel(
   IUserPreferencesService preferencesService,
-  IOverlayService overlayService)
-  : ObservableObject
+  IOverlayService overlayService) : ObservableObject
 {
   #region Fields
 
@@ -64,8 +63,7 @@ public partial class SettingsViewModel(
   {
     var prefs = new OverlayPreferences
     {
-      ClickMode = SelectedClickMode,
-      IconLayout = SelectedIconLayout
+      ClickMode = SelectedClickMode, IconLayout = SelectedIconLayout
     };
 
     await preferencesService.SavePreferencesAsync(prefs);

@@ -3,7 +3,6 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-
 using FluentValidation;
 
 namespace Corral.Application.Commands.ResizeFence;
@@ -13,6 +12,8 @@ namespace Corral.Application.Commands.ResizeFence;
 /// </summary>
 public class ResizeFenceCommandValidator : AbstractValidator<ResizeFenceCommand>
 {
+  #region Ctors
+
   /// <summary>
   ///   Initializes validation rules for fence resize.
   /// </summary>
@@ -20,12 +21,10 @@ public class ResizeFenceCommandValidator : AbstractValidator<ResizeFenceCommand>
   {
     RuleFor(cmd => cmd.FenceId).NotEmpty().WithMessage("Fence ID is required");
 
-    RuleFor(cmd => cmd.NewWidth)
-      .GreaterThan(0)
-      .WithMessage("Width must be greater than 0");
+    RuleFor(cmd => cmd.NewWidth).GreaterThan(0).WithMessage("Width must be greater than 0");
 
-    RuleFor(cmd => cmd.NewHeight)
-      .GreaterThan(0)
-      .WithMessage("Height must be greater than 0");
+    RuleFor(cmd => cmd.NewHeight).GreaterThan(0).WithMessage("Height must be greater than 0");
   }
+
+  #endregion
 }

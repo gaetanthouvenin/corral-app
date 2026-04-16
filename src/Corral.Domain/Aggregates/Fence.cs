@@ -504,7 +504,10 @@ public class Fence
   ///   Reorders an item inside the fence.
   /// </summary>
   /// <param name="itemId">The ID of the item being moved.</param>
-  /// <param name="targetItemId">The ID of the item before which the source item is inserted. Empty means move to the end.</param>
+  /// <param name="targetItemId">
+  ///   The ID of the item before which the source item is inserted. Empty means
+  ///   move to the end.
+  /// </param>
   /// <returns>The current fence instance.</returns>
   /// <exception cref="InvalidOperationException">Thrown when the source or target item does not exist.</exception>
   public Fence ReorderItems(string itemId, string targetItemId)

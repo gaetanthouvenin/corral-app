@@ -3,7 +3,6 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-
 using Corral.Application.Commands.ReorderFenceItems;
 using Corral.Domain.Aggregates;
 using Corral.Domain.Contracts.Repositories;

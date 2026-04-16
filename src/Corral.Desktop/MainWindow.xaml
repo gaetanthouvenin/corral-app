@@ -10,10 +10,11 @@
   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
   xmlns:viewModels="clr-namespace:Corral.Desktop.ViewModels"
   xmlns:views="clr-namespace:Corral.Desktop.Views"
+  xmlns:loc="clr-namespace:Corral.Desktop.Localization"
   mc:Ignorable="d"
   d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel, IsDesignTimeCreatable=True}"
   Style="{DynamicResource CustomWindowStyle}"
-  Title="Corral Manager"
+  Title="{x:Static loc:Strings.AppTitle}"
   Width="1400"
   Height="900"
   WindowStartupLocation="CenterScreen"
@@ -69,7 +70,7 @@
         <StackPanel Grid.Row="0"
                     Margin="24,32,24,32">
           <TextBlock
-            Text="Corral"
+            Text="{x:Static loc:Strings.AppName}"
             FontSize="18"
             FontWeight="Bold"
             Foreground="{StaticResource BrushTextPrimary}"
@@ -93,7 +94,7 @@
                                           Height="14"
                                           Foreground="{StaticResource BrushTextSecondary}"
                                           VerticalAlignment="Center" />
-              <TextBlock Text="Home"
+              <TextBlock Text="{x:Static loc:Strings.Nav_Home}"
                          FontSize="13"
                          VerticalAlignment="Center" />
             </StackPanel>
@@ -110,7 +111,7 @@
                                           Height="14"
                                           Foreground="{Binding CurrentViewModel, Converter={StaticResource ViewModelForegroundConverter}, ConverterParameter=Zones}"
                                           VerticalAlignment="Center" />
-              <TextBlock Text="Zones"
+              <TextBlock Text="{x:Static loc:Strings.Nav_Zones}"
                          FontSize="13"
                          Foreground="{Binding CurrentViewModel, Converter={StaticResource ViewModelForegroundConverter}, ConverterParameter=Zones}"
                          VerticalAlignment="Center" />
@@ -141,7 +142,7 @@
                                           Height="14"
                                           Foreground="{Binding CurrentViewModel, Converter={StaticResource ViewModelForegroundConverter}, ConverterParameter=Settings}"
                                           VerticalAlignment="Center" />
-              <TextBlock Text="Settings"
+              <TextBlock Text="{x:Static loc:Strings.Nav_Settings}"
                          FontSize="13"
                          Foreground="{Binding CurrentViewModel, Converter={StaticResource ViewModelForegroundConverter}, ConverterParameter=Settings}"
                          VerticalAlignment="Center" />
@@ -174,7 +175,7 @@
                                         Height="14"
                                         Foreground="{StaticResource BrushTextSecondary}"
                                         VerticalAlignment="Center" />
-            <TextBlock Text="Help"
+            <TextBlock Text="{x:Static loc:Strings.Nav_Help}"
                        FontSize="13"
                        VerticalAlignment="Center" />
           </StackPanel>

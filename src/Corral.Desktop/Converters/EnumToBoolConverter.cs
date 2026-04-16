@@ -3,6 +3,7 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
+
 using System.Globalization;
 using System.Windows.Data;
 

@@ -8,10 +8,11 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
   xmlns:viewModels="clr-namespace:Corral.Desktop.ViewModels"
+  xmlns:loc="clr-namespace:Corral.Desktop.Localization"
   mc:Ignorable="d"
   d:DataContext="{d:DesignInstance Type=viewModels:EditZoneDialogViewModel, IsDesignTimeCreatable=True}"
   FocusManager.FocusedElement="{Binding ElementName=ZoneNameInput}"
-  Title="Modifier la zone"
+  Title="{x:Static loc:Strings.EditZone_Title}"
   Width="480"
   Height="500"
   WindowStartupLocation="CenterOwner"
@@ -27,7 +28,10 @@
     Background="{StaticResource BrushSurface}"
     CornerRadius="12">
     <Border.Effect>
-      <DropShadowEffect Color="Black" BlurRadius="24" ShadowDepth="8" Opacity="0.6" />
+      <DropShadowEffect Color="Black"
+                        BlurRadius="24"
+                        ShadowDepth="8"
+                        Opacity="0.6" />
     </Border.Effect>
 
     <Grid>
@@ -49,30 +53,48 @@
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
 
-          <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-            <iconPacks:PackIconMaterial Kind="Pencil" Width="18" Height="18"
+          <StackPanel Grid.Column="0"
+                      Orientation="Horizontal"
+                      VerticalAlignment="Center">
+            <iconPacks:PackIconMaterial Kind="Pencil"
+                                        Width="18"
+                                        Height="18"
                                         Foreground="{StaticResource BrushAccent}"
-                                        VerticalAlignment="Center" Margin="0,0,10,0" />
-            <TextBlock Text="Modifier la zone" FontSize="15" FontWeight="SemiBold"
-                       Foreground="{StaticResource BrushTextPrimary}" VerticalAlignment="Center" />
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,10,0" />
+            <TextBlock Text="{x:Static loc:Strings.EditZone_Header}"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       Foreground="{StaticResource BrushTextPrimary}"
+                       VerticalAlignment="Center" />
           </StackPanel>
 
-          <Button Grid.Column="1" Command="{Binding CancelCommand}"
-                  Width="32" Height="32" Cursor="Hand"
-                  Background="Transparent" BorderThickness="0">
+          <Button Grid.Column="1"
+                  Command="{Binding CancelCommand}"
+                  Width="32"
+                  Height="32"
+                  Cursor="Hand"
+                  Background="Transparent"
+                  BorderThickness="0">
             <Button.Template>
               <ControlTemplate TargetType="Button">
-                <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="6">
+                  <ContentPresenter HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
                 </Border>
                 <ControlTemplate.Triggers>
-                  <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#22FFFFFF" />
+                  <Trigger Property="IsMouseOver"
+                           Value="True">
+                    <Setter Property="Background"
+                            Value="#22FFFFFF" />
                   </Trigger>
                 </ControlTemplate.Triggers>
               </ControlTemplate>
             </Button.Template>
-            <iconPacks:PackIconMaterial Kind="Close" Width="14" Height="14"
+            <iconPacks:PackIconMaterial Kind="Close"
+                                        Width="14"
+                                        Height="14"
                                         Foreground="{StaticResource BrushTextSecondary}" />
           </Button>
         </Grid>
@@ -81,10 +103,12 @@
       <!-- ========================
            FORM CONTENT
            ======================== -->
-      <StackPanel Grid.Row="1" Margin="24,20,24,0">
+      <StackPanel Grid.Row="1"
+                  Margin="24,20,24,0">
 
         <!-- Zone Name -->
-        <TextBlock Text="NOM DE LA ZONE" Style="{StaticResource FieldLabel}" />
+        <TextBlock Text="{x:Static loc:Strings.EditZone_NameLabel}"
+                   Style="{StaticResource FieldLabel}" />
         <TextBox
           x:Name="ZoneNameInput"
           Text="{Binding ZoneName, UpdateSourceTrigger=PropertyChanged}"
@@ -92,10 +116,12 @@
           Margin="0,0,0,20" />
 
         <!-- Color Selection -->
-        <TextBlock Text="COULEUR" Style="{StaticResource FieldLabel}" />
+        <TextBlock Text="{x:Static loc:Strings.EditZone_ColorLabel}"
+                   Style="{StaticResource FieldLabel}" />
 
         <!-- Color Swatches (ItemsControl) -->
-        <ItemsControl ItemsSource="{Binding ColorPresets}" Margin="0,0,0,10">
+        <ItemsControl ItemsSource="{Binding ColorPresets}"
+                      Margin="0,0,0,10">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
               <StackPanel Orientation="Horizontal" />
@@ -114,17 +140,22 @@
         </ItemsControl>
 
         <!-- Color Preview Bar -->
-        <Border Height="36" CornerRadius="6" Margin="0,0,0,20"
+        <Border Height="36"
+                CornerRadius="6"
+                Margin="0,0,0,20"
                 Background="{Binding ColorPreview}">
           <TextBlock
             Text="{Binding SelectedColor}"
-            FontFamily="Consolas" FontSize="12"
+            FontFamily="Consolas"
+            FontSize="12"
             Foreground="White"
-            HorizontalAlignment="Center" VerticalAlignment="Center" />
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" />
         </Border>
 
         <!-- Opacity Slider -->
-        <TextBlock Text="OPACITÉ" Style="{StaticResource FieldLabel}" />
+        <TextBlock Text="{x:Static loc:Strings.EditZone_OpacityLabel}"
+                   Style="{StaticResource FieldLabel}" />
         <Grid Margin="0,0,0,16">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -133,7 +164,8 @@
 
           <Slider
             Grid.Column="0"
-            Minimum="0" Maximum="100"
+            Minimum="0"
+            Maximum="100"
             Value="{Binding Opacity}"
             VerticalAlignment="Center"
             Margin="0,0,12,0" />
@@ -143,8 +175,10 @@
                   BorderBrush="{StaticResource BrushBorder}"
                   BorderThickness="1"
                   CornerRadius="4">
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Foreground="{StaticResource BrushTextPrimary}" FontSize="13">
+            <TextBlock HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource BrushTextPrimary}"
+                       FontSize="13">
               <Run Text="{Binding Opacity}" /><Run Text="%" />
             </TextBlock>
           </Border>
@@ -176,7 +210,7 @@
 
           <!-- Loading indicator -->
           <TextBlock Grid.Column="0"
-                     Text="Modification en cours..."
+                     Text="{x:Static loc:Strings.EditZone_Saving}"
                      FontSize="12"
                      Foreground="{StaticResource BrushTextSecondary}"
                      VerticalAlignment="Center"
@@ -184,7 +218,7 @@
 
           <!-- Cancel Button -->
           <Button Grid.Column="1"
-                  Content="Annuler"
+                  Content="{x:Static loc:Strings.EditZone_Cancel}"
                   Command="{Binding CancelCommand}"
                   Style="{StaticResource ButtonSecondary}"
                   Margin="0,0,8,0" />
@@ -194,9 +228,13 @@
                   Command="{Binding UpdateZoneCommand}"
                   Style="{StaticResource ButtonPrimary}">
             <StackPanel Orientation="Horizontal">
-              <iconPacks:PackIconMaterial Kind="Pencil" Width="14" Height="14"
-                                          VerticalAlignment="Center" Margin="0,0,6,0" />
-              <TextBlock Text="Enregistrer" VerticalAlignment="Center" />
+              <iconPacks:PackIconMaterial Kind="Pencil"
+                                          Width="14"
+                                          Height="14"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,6,0" />
+              <TextBlock Text="{x:Static loc:Strings.EditZone_Submit}"
+                         VerticalAlignment="Center" />
             </StackPanel>
           </Button>
         </Grid>

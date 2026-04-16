@@ -3,7 +3,6 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace Corral.Desktop.Views;

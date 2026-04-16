@@ -1,8 +1,9 @@
-  <Window x:Class="Corral.Desktop.Views.FenceOverlayWindow"
+<Window x:Class="Corral.Desktop.Views.FenceOverlayWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:Corral.Desktop.Controls"
         xmlns:behaviors="clr-namespace:Corral.Desktop.Behaviors"
+        xmlns:loc="clr-namespace:Corral.Desktop.Localization"
         xmlns:primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -12,162 +13,175 @@
         MinWidth="150"
         MinHeight="120"
         Background="Transparent">
-    <Window.Resources>
-      <ResourceDictionary>
-        <ResourceDictionary.MergedDictionaries>
-          <ResourceDictionary Source="pack://application:,,,/Corral.Desktop;component/Resources/Styles.xaml" />
-        </ResourceDictionary.MergedDictionaries>
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary
+          Source="pack://application:,,,/Corral.Desktop;component/Resources/Styles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
 
-        <!-- Data Template Selector -->
-        <controls:IconLayoutDataTemplateSelector x:Key="IconLayoutSelector">
-      <controls:IconLayoutDataTemplateSelector.LargeGridTemplate>
-        <DataTemplate>
-          <Border BorderThickness="0,2,0,0"
-                  Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}">
-            <Border.Style>
-              <Style TargetType="Border">
-                <Setter Property="BorderBrush" Value="Transparent"/>
-                <Style.Triggers>
-                  <DataTrigger Binding="{Binding Path=(behaviors:ReorderItemsBehavior.IsDropTarget), RelativeSource={RelativeSource AncestorType=ContentPresenter}}" Value="True">
-                    <Setter Property="BorderBrush" Value="#FF4080FF"/>
-                  </DataTrigger>
-                </Style.Triggers>
-              </Style>
-            </Border.Style>
-            <Border.ContextMenu>
-              <ContextMenu Style="{StaticResource OverlayContextMenu}">
-                <MenuItem Header="Supprimer"
-                          Style="{StaticResource OverlayMenuItem}"
-                          Command="{Binding PlacementTarget.Tag.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                          CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-              </ContextMenu>
-            </Border.ContextMenu>
-            <StackPanel Orientation="Vertical"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Margin="6"
-                        Width="72">
-              <Image Source="{Binding Icon}"
-                     Width="48"
-                     Height="48"
-                     Stretch="UniformToFill"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Top"
-                     Margin="0,0,0,4"
-                     PreviewMouseDown="OnItemMouseDown"
-                     Cursor="Hand"/>
-              <TextBlock Text="{Binding DisplayName}"
-                         FontSize="10"
-                         Foreground="#CCCCCC"
-                         HorizontalAlignment="Center"
-                         TextAlignment="Center"
-                         TextTrimming="CharacterEllipsis"
-                         MaxWidth="66"
-                         TextWrapping="Wrap"
-                         LineHeight="11"/>
-            </StackPanel>
-          </Border>
-        </DataTemplate>
-      </controls:IconLayoutDataTemplateSelector.LargeGridTemplate>
+      <!-- Data Template Selector -->
+      <controls:IconLayoutDataTemplateSelector x:Key="IconLayoutSelector">
+        <controls:IconLayoutDataTemplateSelector.LargeGridTemplate>
+          <DataTemplate>
+            <Border BorderThickness="0,2,0,0"
+                    Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}">
+              <Border.Style>
+                <Style TargetType="Border">
+                  <Setter Property="BorderBrush"
+                          Value="Transparent" />
+                  <Style.Triggers>
+                    <DataTrigger
+                      Binding="{Binding Path=(behaviors:ReorderItemsBehavior.IsDropTarget), RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+                      Value="True">
+                      <Setter Property="BorderBrush"
+                              Value="#FF4080FF" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </Border.Style>
+              <Border.ContextMenu>
+                <ContextMenu Style="{StaticResource OverlayContextMenu}">
+                  <MenuItem Header="{x:Static loc:Strings.Overlay_Delete}"
+                            Style="{StaticResource OverlayMenuItem}"
+                            Command="{Binding PlacementTarget.Tag.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                            CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                </ContextMenu>
+              </Border.ContextMenu>
+              <StackPanel Orientation="Vertical"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Top"
+                          Margin="6"
+                          Width="72">
+                <Image Source="{Binding Icon}"
+                       Width="48"
+                       Height="48"
+                       Stretch="UniformToFill"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Margin="0,0,0,4"
+                       PreviewMouseDown="OnItemMouseDown"
+                       Cursor="Hand" />
+                <TextBlock Text="{Binding DisplayName}"
+                           FontSize="10"
+                           Foreground="#CCCCCC"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           MaxWidth="66"
+                           TextWrapping="Wrap"
+                           LineHeight="11" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </controls:IconLayoutDataTemplateSelector.LargeGridTemplate>
 
-      <controls:IconLayoutDataTemplateSelector.SmallGridTemplate>
-        <DataTemplate>
-          <Border BorderThickness="0,2,0,0"
-                  Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}">
-            <Border.Style>
-              <Style TargetType="Border">
-                <Setter Property="BorderBrush" Value="Transparent"/>
-                <Style.Triggers>
-                  <DataTrigger Binding="{Binding Path=(behaviors:ReorderItemsBehavior.IsDropTarget), RelativeSource={RelativeSource AncestorType=ContentPresenter}}" Value="True">
-                    <Setter Property="BorderBrush" Value="#FF4080FF"/>
-                  </DataTrigger>
-                </Style.Triggers>
-              </Style>
-            </Border.Style>
-            <Border.ContextMenu>
-              <ContextMenu Style="{StaticResource OverlayContextMenu}">
-                <MenuItem Header="Supprimer"
-                          Style="{StaticResource OverlayMenuItem}"
-                          Command="{Binding PlacementTarget.Tag.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                          CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-              </ContextMenu>
-            </Border.ContextMenu>
-            <StackPanel Orientation="Vertical"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Margin="4"
-                        Width="50">
-              <Image Source="{Binding Icon}"
-                     Width="32"
-                     Height="32"
-                     Stretch="UniformToFill"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Top"
-                     Margin="0,0,0,2"
-                     PreviewMouseDown="OnItemMouseDown"
-                     Cursor="Hand"/>
-              <TextBlock Text="{Binding DisplayName}"
-                         FontSize="8"
-                         Foreground="#AAAAAA"
-                         HorizontalAlignment="Center"
-                         TextAlignment="Center"
-                         TextTrimming="CharacterEllipsis"
-                         MaxWidth="44"
-                         TextWrapping="Wrap"
-                         LineHeight="9"/>
-            </StackPanel>
-          </Border>
-        </DataTemplate>
-      </controls:IconLayoutDataTemplateSelector.SmallGridTemplate>
+        <controls:IconLayoutDataTemplateSelector.SmallGridTemplate>
+          <DataTemplate>
+            <Border BorderThickness="0,2,0,0"
+                    Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}">
+              <Border.Style>
+                <Style TargetType="Border">
+                  <Setter Property="BorderBrush"
+                          Value="Transparent" />
+                  <Style.Triggers>
+                    <DataTrigger
+                      Binding="{Binding Path=(behaviors:ReorderItemsBehavior.IsDropTarget), RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+                      Value="True">
+                      <Setter Property="BorderBrush"
+                              Value="#FF4080FF" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </Border.Style>
+              <Border.ContextMenu>
+                <ContextMenu Style="{StaticResource OverlayContextMenu}">
+                  <MenuItem Header="{x:Static loc:Strings.Overlay_Delete}"
+                            Style="{StaticResource OverlayMenuItem}"
+                            Command="{Binding PlacementTarget.Tag.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                            CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                </ContextMenu>
+              </Border.ContextMenu>
+              <StackPanel Orientation="Vertical"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Top"
+                          Margin="4"
+                          Width="50">
+                <Image Source="{Binding Icon}"
+                       Width="32"
+                       Height="32"
+                       Stretch="UniformToFill"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Margin="0,0,0,2"
+                       PreviewMouseDown="OnItemMouseDown"
+                       Cursor="Hand" />
+                <TextBlock Text="{Binding DisplayName}"
+                           FontSize="8"
+                           Foreground="#AAAAAA"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           MaxWidth="44"
+                           TextWrapping="Wrap"
+                           LineHeight="9" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </controls:IconLayoutDataTemplateSelector.SmallGridTemplate>
 
-      <controls:IconLayoutDataTemplateSelector.ListTemplate>
-        <DataTemplate>
-          <Border BorderThickness="2,0,0,0"
-                  Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}">
-            <Border.Style>
-              <Style TargetType="Border">
-                <Setter Property="BorderBrush" Value="Transparent"/>
-                <Style.Triggers>
-                  <DataTrigger Binding="{Binding Path=(behaviors:ReorderItemsBehavior.IsDropTarget), RelativeSource={RelativeSource AncestorType=ContentPresenter}}" Value="True">
-                    <Setter Property="BorderBrush" Value="#FF4080FF"/>
-                  </DataTrigger>
-                </Style.Triggers>
-              </Style>
-            </Border.Style>
-            <Border.ContextMenu>
-              <ContextMenu Style="{StaticResource OverlayContextMenu}">
-                <MenuItem Header="Supprimer"
-                          Style="{StaticResource OverlayMenuItem}"
-                          Command="{Binding PlacementTarget.Tag.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                          CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-              </ContextMenu>
-            </Border.ContextMenu>
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center"
-                        Margin="4,2"
-                        Height="24">
-              <Image Source="{Binding Icon}"
-                     Width="16"
-                     Height="16"
-                     Stretch="UniformToFill"
-                     VerticalAlignment="Center"
-                     Margin="0,0,8,0"
-                     PreviewMouseDown="OnItemMouseDown"
-                     Cursor="Hand"/>
-              <TextBlock Text="{Binding DisplayName}"
-                         FontSize="10"
-                         Foreground="#DDDDDD"
-                         VerticalAlignment="Center"
-                         TextTrimming="CharacterEllipsis"
-                         TextWrapping="NoWrap"/>
-            </StackPanel>
-          </Border>
-        </DataTemplate>
-      </controls:IconLayoutDataTemplateSelector.ListTemplate>
+        <controls:IconLayoutDataTemplateSelector.ListTemplate>
+          <DataTemplate>
+            <Border BorderThickness="2,0,0,0"
+                    Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}">
+              <Border.Style>
+                <Style TargetType="Border">
+                  <Setter Property="BorderBrush"
+                          Value="Transparent" />
+                  <Style.Triggers>
+                    <DataTrigger
+                      Binding="{Binding Path=(behaviors:ReorderItemsBehavior.IsDropTarget), RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+                      Value="True">
+                      <Setter Property="BorderBrush"
+                              Value="#FF4080FF" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </Border.Style>
+              <Border.ContextMenu>
+                <ContextMenu Style="{StaticResource OverlayContextMenu}">
+                  <MenuItem Header="{x:Static loc:Strings.Overlay_Delete}"
+                            Style="{StaticResource OverlayMenuItem}"
+                            Command="{Binding PlacementTarget.Tag.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                            CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                </ContextMenu>
+              </Border.ContextMenu>
+              <StackPanel Orientation="Horizontal"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          Margin="4,2"
+                          Height="24">
+                <Image Source="{Binding Icon}"
+                       Width="16"
+                       Height="16"
+                       Stretch="UniformToFill"
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,0"
+                       PreviewMouseDown="OnItemMouseDown"
+                       Cursor="Hand" />
+                <TextBlock Text="{Binding DisplayName}"
+                           FontSize="10"
+                           Foreground="#DDDDDD"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </controls:IconLayoutDataTemplateSelector.ListTemplate>
       </controls:IconLayoutDataTemplateSelector>
-      </ResourceDictionary>
-    </Window.Resources>
+    </ResourceDictionary>
+  </Window.Resources>
   <Grid>
     <!-- Main overlay area - dark themed card with colored border -->
     <Border x:Name="OverlayBorder"
@@ -177,18 +191,18 @@
             BorderBrush="#4080FF">
       <Grid>
         <Grid.RowDefinitions>
-          <RowDefinition Height="40"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
+          <RowDefinition Height="40" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Space for title bar -->
-        <Border Grid.Row="0"/>
+        <Border Grid.Row="0" />
 
         <!-- Separator -->
         <Border Grid.Row="1"
                 Height="1"
-                Background="#1AFFFFFF"/>
+                Background="#1AFFFFFF" />
 
         <!-- Items List -->
         <ItemsControl x:Name="ItemsPanel"
@@ -199,7 +213,7 @@
                       ItemTemplateSelector="{StaticResource IconLayoutSelector}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal"/>
+              <WrapPanel Orientation="Horizontal" />
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
         </ItemsControl>
@@ -218,9 +232,9 @@
             MouseMove="OnDragHandleMouseMove">
       <Grid>
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="Auto"/>
-          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="ZoneNameLabel"
                    Text="ZONE NAME"
@@ -230,7 +244,7 @@
                    Margin="16,0,0,0"
                    VerticalAlignment="Center"
                    TextOptions.TextRenderingMode="ClearType"
-                   RenderOptions.EdgeMode="Aliased"/>
+                   RenderOptions.EdgeMode="Aliased" />
         <TextBlock Grid.Column="1"
                    Text="＋"
                    FontSize="14"
@@ -238,13 +252,13 @@
                    Margin="0,0,8,0"
                    VerticalAlignment="Center"
                    Cursor="Hand"
-                   MouseLeftButtonDown="OnAddItemButtonClick"/>
+                   MouseLeftButtonDown="OnAddItemButtonClick" />
         <TextBlock Grid.Column="2"
                    Text="⠿"
                    FontSize="14"
                    Foreground="#66FFFFFF"
                    Margin="0,0,16,0"
-                   VerticalAlignment="Center"/>
+                   VerticalAlignment="Center" />
       </Grid>
     </Border>
 
@@ -255,7 +269,7 @@
                       Tag="Top"
                       DragStarted="OnResizeThumbDragStarted"
                       DragDelta="OnResizeThumbDragDelta"
-                      DragCompleted="OnResizeThumbDragCompleted"/>
+                      DragCompleted="OnResizeThumbDragCompleted" />
 
     <primitives:Thumb Height="6"
                       VerticalAlignment="Bottom"
@@ -264,7 +278,7 @@
                       Tag="Bottom"
                       DragStarted="OnResizeThumbDragStarted"
                       DragDelta="OnResizeThumbDragDelta"
-                      DragCompleted="OnResizeThumbDragCompleted"/>
+                      DragCompleted="OnResizeThumbDragCompleted" />
 
     <primitives:Thumb Width="6"
                       HorizontalAlignment="Left"
@@ -273,7 +287,7 @@
                       Tag="Left"
                       DragStarted="OnResizeThumbDragStarted"
                       DragDelta="OnResizeThumbDragDelta"
-                      DragCompleted="OnResizeThumbDragCompleted"/>
+                      DragCompleted="OnResizeThumbDragCompleted" />
 
     <primitives:Thumb Width="6"
                       HorizontalAlignment="Right"
@@ -282,7 +296,7 @@
                       Tag="Right"
                       DragStarted="OnResizeThumbDragStarted"
                       DragDelta="OnResizeThumbDragDelta"
-                      DragCompleted="OnResizeThumbDragCompleted"/>
+                      DragCompleted="OnResizeThumbDragCompleted" />
 
     <primitives:Thumb Width="12"
                       Height="12"
@@ -293,7 +307,7 @@
                       Tag="TopLeft"
                       DragStarted="OnResizeThumbDragStarted"
                       DragDelta="OnResizeThumbDragDelta"
-                      DragCompleted="OnResizeThumbDragCompleted"/>
+                      DragCompleted="OnResizeThumbDragCompleted" />
 
     <primitives:Thumb Width="12"
                       Height="12"
@@ -304,7 +318,7 @@
                       Tag="TopRight"
                       DragStarted="OnResizeThumbDragStarted"
                       DragDelta="OnResizeThumbDragDelta"
-                      DragCompleted="OnResizeThumbDragCompleted"/>
+                      DragCompleted="OnResizeThumbDragCompleted" />
 
     <primitives:Thumb Width="12"
                       Height="12"
@@ -315,7 +329,7 @@
                       Tag="BottomLeft"
                       DragStarted="OnResizeThumbDragStarted"
                       DragDelta="OnResizeThumbDragDelta"
-                      DragCompleted="OnResizeThumbDragCompleted"/>
+                      DragCompleted="OnResizeThumbDragCompleted" />
 
     <primitives:Thumb Width="16"
                       Height="16"
@@ -326,6 +340,6 @@
                       Tag="BottomRight"
                       DragStarted="OnResizeThumbDragStarted"
                       DragDelta="OnResizeThumbDragDelta"
-                      DragCompleted="OnResizeThumbDragCompleted"/>
+                      DragCompleted="OnResizeThumbDragCompleted" />
   </Grid>
 </Window>

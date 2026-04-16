@@ -5,7 +5,8 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:converters="clr-namespace:Corral.Desktop.Converters"
   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-  xmlns:behaviors="clr-namespace:Corral.Desktop.Behaviors">
+  xmlns:behaviors="clr-namespace:Corral.Desktop.Behaviors"
+  xmlns:loc="clr-namespace:Corral.Desktop.Localization">
 
   <ResourceDictionary.MergedDictionaries>
     <ResourceDictionary Source="Brushes.xaml" />
@@ -19,7 +20,7 @@
 
   <!-- Context Menu for Zone Card -->
   <ContextMenu x:Key="ZoneCardContextMenu">
-    <MenuItem Header="Delete Zone"
+    <MenuItem Header="{x:Static loc:Strings.ZoneCard_Delete}"
               Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.DeleteZoneCommand}"
               CommandParameter="{Binding Id}">
       <MenuItem.Icon>
@@ -83,7 +84,7 @@
                    Fill="{StaticResource BrushTextSecondary}"
                    VerticalAlignment="Center" />
           <TextBlock x:Name="StatusText"
-                     Text="STANDBY"
+                     Text="{x:Static loc:Strings.ZoneCard_Standby}"
                      FontSize="10"
                      FontWeight="Bold"
                      Foreground="{StaticResource BrushTextSecondary}"
@@ -108,7 +109,7 @@
                                           Width="24"
                                           Height="24"
                                           HorizontalAlignment="Center" />
-              <TextBlock Text="DROP FILES HERE"
+              <TextBlock Text="{x:Static loc:Strings.ZoneCard_DropFilesHere}"
                          FontSize="9"
                          Foreground="{StaticResource BrushTextTertiary}"
                          HorizontalAlignment="Center"
@@ -157,7 +158,7 @@
                                           Foreground="{StaticResource BrushTextSecondary}"
                                           VerticalAlignment="Center"
                                           Margin="0,0,8,0" />
-              <TextBlock Text="EDIT ZONE"
+              <TextBlock Text="{x:Static loc:Strings.ZoneCard_EditZone}"
                          FontSize="10"
                          FontWeight="Bold"
                          Foreground="{StaticResource BrushTextSecondary}"
@@ -176,7 +177,7 @@
                                           Foreground="{StaticResource BrushTextSecondary}"
                                           VerticalAlignment="Center"
                                           Margin="0,0,8,0" />
-              <TextBlock Text="DELETE"
+              <TextBlock Text="{x:Static loc:Strings.ZoneCard_Delete}"
                          FontSize="10"
                          FontWeight="Bold"
                          Foreground="{StaticResource BrushTextSecondary}"
@@ -198,7 +199,7 @@
                 Value="{Binding Color, Converter={StaticResource StringToColorConverter}}" />
         <Setter TargetName="StatusText"
                 Property="Text"
-                Value="ACTIVE" />
+                Value="{x:Static loc:Strings.ZoneCard_Active}" />
       </DataTrigger>
     </DataTemplate.Triggers>
   </DataTemplate>

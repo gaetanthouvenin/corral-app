@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- General -->
+  <data name="AppName" xml:space="preserve"><value>Corral</value></data>
+  <data name="AppTitle" xml:space="preserve"><value>Corral Manager</value></data>
+
+  <!-- Navigation -->
+  <data name="Nav_Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Nav_Zones" xml:space="preserve"><value>Zones</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Nav_Help" xml:space="preserve"><value>Help</value></data>
+
+  <!-- ZonesView -->
+  <data name="Zones_PageTitle" xml:space="preserve"><value>CORRAL MANAGER / ACTIVE ZONES</value></data>
+  <data name="Zones_Subtitle" xml:space="preserve"><value>Simplify your workspace by managing active zones.</value></data>
+  <data name="Zones_ToggleHint" xml:space="preserve"><value>Toggle or edit environments below.</value></data>
+  <data name="Zones_ShowOverlays" xml:space="preserve"><value>Show Overlays</value></data>
+  <data name="Zones_HideOverlays" xml:space="preserve"><value>Hide Overlays</value></data>
+  <data name="Zones_CreateZone" xml:space="preserve"><value>Create Zone</value></data>
+
+  <!-- DataTemplates (zone card) -->
+  <data name="ZoneCard_Active" xml:space="preserve"><value>ACTIVE</value></data>
+  <data name="ZoneCard_Standby" xml:space="preserve"><value>STANDBY</value></data>
+  <data name="ZoneCard_DropFilesHere" xml:space="preserve"><value>DROP FILES HERE</value></data>
+  <data name="ZoneCard_EditZone" xml:space="preserve"><value>EDIT ZONE</value></data>
+  <data name="ZoneCard_Delete" xml:space="preserve"><value>DELETE</value></data>
+
+  <!-- CreateZoneDialog -->
+  <data name="CreateZone_Title" xml:space="preserve"><value>New Zone</value></data>
+  <data name="CreateZone_Header" xml:space="preserve"><value>New Zone</value></data>
+  <data name="CreateZone_NameLabel" xml:space="preserve"><value>ZONE NAME</value></data>
+  <data name="CreateZone_ColorLabel" xml:space="preserve"><value>COLOR</value></data>
+  <data name="CreateZone_OpacityLabel" xml:space="preserve"><value>OPACITY</value></data>
+  <data name="CreateZone_Creating" xml:space="preserve"><value>Creating...</value></data>
+  <data name="CreateZone_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="CreateZone_Submit" xml:space="preserve"><value>Create Zone</value></data>
+
+  <!-- EditZoneDialog -->
+  <data name="EditZone_Title" xml:space="preserve"><value>Edit Zone</value></data>
+  <data name="EditZone_Header" xml:space="preserve"><value>Edit Zone</value></data>
+  <data name="EditZone_NameLabel" xml:space="preserve"><value>ZONE NAME</value></data>
+  <data name="EditZone_ColorLabel" xml:space="preserve"><value>COLOR</value></data>
+  <data name="EditZone_OpacityLabel" xml:space="preserve"><value>OPACITY</value></data>
+  <data name="EditZone_Saving" xml:space="preserve"><value>Saving...</value></data>
+  <data name="EditZone_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="EditZone_Submit" xml:space="preserve"><value>Save</value></data>
+
+  <!-- SettingsView -->
+  <data name="Settings_PageTitle" xml:space="preserve"><value>CORRAL MANAGER / SETTINGS</value></data>
+  <data name="Settings_Header" xml:space="preserve"><value>Settings</value></data>
+  <data name="Settings_Subtitle" xml:space="preserve"><value>Configure the overlay behaviour.</value></data>
+  <data name="Settings_ClickModeLabel" xml:space="preserve"><value>CLICK MODE</value></data>
+  <data name="Settings_ClickModeHint" xml:space="preserve"><value>Choose how to open items in overlays.</value></data>
+  <data name="Settings_SingleClick" xml:space="preserve"><value>Single click</value></data>
+  <data name="Settings_SingleClickHint" xml:space="preserve"><value>One click to open</value></data>
+  <data name="Settings_DoubleClick" xml:space="preserve"><value>Double click</value></data>
+  <data name="Settings_DoubleClickHint" xml:space="preserve"><value>Two clicks to open</value></data>
+  <data name="Settings_IconLayoutLabel" xml:space="preserve"><value>ICON LAYOUT</value></data>
+  <data name="Settings_IconLayoutHint" xml:space="preserve"><value>Choose how items are displayed in overlays.</value></data>
+  <data name="Settings_IconLarge" xml:space="preserve"><value>Large icons</value></data>
+  <data name="Settings_IconSmall" xml:space="preserve"><value>Small icons</value></data>
+  <data name="Settings_IconList" xml:space="preserve"><value>List</value></data>
+  <data name="Settings_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>Reset</value></data>
+
+  <!-- FenceOverlayWindow -->
+  <data name="Overlay_ZoneNamePlaceholder" xml:space="preserve"><value>ZONE NAME</value></data>
+  <data name="Overlay_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Overlay_AddProgram" xml:space="preserve"><value>Program...</value></data>
+  <data name="Overlay_AddFile" xml:space="preserve"><value>File...</value></data>
+  <data name="Overlay_AddFolder" xml:space="preserve"><value>Folder...</value></data>
+  <data name="Overlay_BrowseFolder" xml:space="preserve"><value>Select a folder</value></data>
+  <data name="Overlay_BrowseProgram" xml:space="preserve"><value>Select a program</value></data>
+  <data name="Overlay_BrowseFile" xml:space="preserve"><value>Select a file</value></data>
+  <data name="Overlay_FilterPrograms" xml:space="preserve"><value>Programs</value></data>
+  <data name="Overlay_FilterAllFiles" xml:space="preserve"><value>All files</value></data>
+
+  <!-- Error messages (App.xaml.cs) -->
+  <data name="Error_Unexpected" xml:space="preserve"><value>An unexpected error occurred:</value></data>
+  <data name="Error_UnexpectedTitle" xml:space="preserve"><value>Error — Corral Manager</value></data>
+  <data name="Error_Fatal" xml:space="preserve"><value>A critical error occurred. The application will close.</value></data>
+  <data name="Error_FatalTitle" xml:space="preserve"><value>Critical Error — Corral Manager</value></data>
+</root>

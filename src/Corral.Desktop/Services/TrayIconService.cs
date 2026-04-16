@@ -3,7 +3,6 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-
 using Microsoft.Extensions.Logging;
 
 namespace Corral.Desktop.Services;

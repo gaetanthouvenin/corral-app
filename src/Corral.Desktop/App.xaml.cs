@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
 
+using Corral.Desktop.Localization;
 using Corral.Desktop.Services;
 using Corral.Desktop.ViewModels;
 using Corral.Desktop.Views;
@@ -132,8 +133,8 @@ public partial class App : System.Windows.Application
     _logger?.LogError(e.Exception, "Exception non managée sur le thread UI");
 
     MessageBox.Show(
-      $"Une erreur inattendue s'est produite :{Environment.NewLine}{e.Exception.Message}",
-      "Erreur — Corral Manager",
+      $"{Strings.Error_Unexpected}{Environment.NewLine}{e.Exception.Message}",
+      Strings.Error_UnexpectedTitle,
       MessageBoxButton.OK,
       MessageBoxImage.Error
     );
@@ -162,8 +163,8 @@ public partial class App : System.Windows.Application
     if (ex != null)
     {
       MessageBox.Show(
-        $"Une erreur critique s'est produite. L'application va se fermer.{Environment.NewLine}{ex.Message}",
-        "Erreur critique — Corral Manager",
+        $"{Strings.Error_Fatal}{Environment.NewLine}{ex.Message}",
+        Strings.Error_FatalTitle,
         MessageBoxButton.OK,
         MessageBoxImage.Error
       );

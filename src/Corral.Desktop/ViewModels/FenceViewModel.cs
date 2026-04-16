@@ -13,8 +13,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using Corral.Application.Commands.AddItemToFence;
 using Corral.Application.Commands.DeleteFence;
-using Corral.Application.Commands.ReorderFenceItems;
 using Corral.Application.Commands.RemoveItemFromFence;
+using Corral.Application.Commands.ReorderFenceItems;
 using Corral.Desktop.Services;
 
 using MediatR;

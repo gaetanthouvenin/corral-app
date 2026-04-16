@@ -3,7 +3,6 @@
 //   Copyright (c) Gaëtan THOUVENIN. All rights reserved.
 // </copyright>
 // ------------------------------------------------------------------------------------------------
-
 using FluentValidation;
 
 namespace Corral.Application.Commands.ReorderFenceItems;
@@ -13,6 +12,8 @@ namespace Corral.Application.Commands.ReorderFenceItems;
 /// </summary>
 public class ReorderFenceItemsCommandValidator : AbstractValidator<ReorderFenceItemsCommand>
 {
+  #region Ctors
+
   /// <summary>
   ///   Initializes validation rules for item reordering.
   /// </summary>
@@ -21,4 +22,6 @@ public class ReorderFenceItemsCommandValidator : AbstractValidator<ReorderFenceI
     RuleFor(x => x.FenceId).NotEmpty().WithMessage("Fence ID is required");
     RuleFor(x => x.ItemId).NotEmpty().WithMessage("Item ID is required");
   }
+
+  #endregion
 }

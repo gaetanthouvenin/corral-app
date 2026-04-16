@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="AppName" xml:space="preserve"><value>Corral</value></data>
+  <data name="AppTitle" xml:space="preserve"><value>Corral Manager</value></data>
+
+  <data name="Nav_Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Nav_Zones" xml:space="preserve"><value>Zone</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Impostazioni</value></data>
+  <data name="Nav_Help" xml:space="preserve"><value>Aiuto</value></data>
+
+  <data name="Zones_PageTitle" xml:space="preserve"><value>CORRAL MANAGER / ZONE ATTIVE</value></data>
+  <data name="Zones_Subtitle" xml:space="preserve"><value>Semplifica il tuo spazio di lavoro gestendo le zone attive.</value></data>
+  <data name="Zones_ToggleHint" xml:space="preserve"><value>Attiva o modifica gli ambienti qui sotto.</value></data>
+  <data name="Zones_ShowOverlays" xml:space="preserve"><value>Mostra overlay</value></data>
+  <data name="Zones_HideOverlays" xml:space="preserve"><value>Nascondi overlay</value></data>
+  <data name="Zones_CreateZone" xml:space="preserve"><value>Crea zona</value></data>
+
+  <data name="ZoneCard_Active" xml:space="preserve"><value>ATTIVO</value></data>
+  <data name="ZoneCard_Standby" xml:space="preserve"><value>IN ATTESA</value></data>
+  <data name="ZoneCard_DropFilesHere" xml:space="preserve"><value>TRASCINA FILE QUI</value></data>
+  <data name="ZoneCard_EditZone" xml:space="preserve"><value>MODIFICA ZONA</value></data>
+  <data name="ZoneCard_Delete" xml:space="preserve"><value>ELIMINA</value></data>
+
+  <data name="CreateZone_Title" xml:space="preserve"><value>Nuova Zona</value></data>
+  <data name="CreateZone_Header" xml:space="preserve"><value>Nuova Zona</value></data>
+  <data name="CreateZone_NameLabel" xml:space="preserve"><value>NOME ZONA</value></data>
+  <data name="CreateZone_ColorLabel" xml:space="preserve"><value>COLORE</value></data>
+  <data name="CreateZone_OpacityLabel" xml:space="preserve"><value>OPACITÀ</value></data>
+  <data name="CreateZone_Creating" xml:space="preserve"><value>Creazione in corso...</value></data>
+  <data name="CreateZone_Cancel" xml:space="preserve"><value>Annulla</value></data>
+  <data name="CreateZone_Submit" xml:space="preserve"><value>Crea zona</value></data>
+
+  <data name="EditZone_Title" xml:space="preserve"><value>Modifica zona</value></data>
+  <data name="EditZone_Header" xml:space="preserve"><value>Modifica zona</value></data>
+  <data name="EditZone_NameLabel" xml:space="preserve"><value>NOME ZONA</value></data>
+  <data name="EditZone_ColorLabel" xml:space="preserve"><value>COLORE</value></data>
+  <data name="EditZone_OpacityLabel" xml:space="preserve"><value>OPACITÀ</value></data>
+  <data name="EditZone_Saving" xml:space="preserve"><value>Salvataggio...</value></data>
+  <data name="EditZone_Cancel" xml:space="preserve"><value>Annulla</value></data>
+  <data name="EditZone_Submit" xml:space="preserve"><value>Salva</value></data>
+
+  <data name="Settings_PageTitle" xml:space="preserve"><value>CORRAL MANAGER / IMPOSTAZIONI</value></data>
+  <data name="Settings_Header" xml:space="preserve"><value>Impostazioni</value></data>
+  <data name="Settings_Subtitle" xml:space="preserve"><value>Configura il comportamento degli overlay.</value></data>
+  <data name="Settings_ClickModeLabel" xml:space="preserve"><value>MODALITÀ DI CLIC</value></data>
+  <data name="Settings_ClickModeHint" xml:space="preserve"><value>Scegli come aprire gli elementi negli overlay.</value></data>
+  <data name="Settings_SingleClick" xml:space="preserve"><value>Clic singolo</value></data>
+  <data name="Settings_SingleClickHint" xml:space="preserve"><value>Un clic per aprire</value></data>
+  <data name="Settings_DoubleClick" xml:space="preserve"><value>Doppio clic</value></data>
+  <data name="Settings_DoubleClickHint" xml:space="preserve"><value>Due clic per aprire</value></data>
+  <data name="Settings_IconLayoutLabel" xml:space="preserve"><value>LAYOUT ICONE</value></data>
+  <data name="Settings_IconLayoutHint" xml:space="preserve"><value>Scegli come vengono visualizzati gli elementi negli overlay.</value></data>
+  <data name="Settings_IconLarge" xml:space="preserve"><value>Icone grandi</value></data>
+  <data name="Settings_IconSmall" xml:space="preserve"><value>Icone piccole</value></data>
+  <data name="Settings_IconList" xml:space="preserve"><value>Lista</value></data>
+  <data name="Settings_Save" xml:space="preserve"><value>Salva</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>Ripristina</value></data>
+
+  <data name="Overlay_ZoneNamePlaceholder" xml:space="preserve"><value>NOME ZONA</value></data>
+  <data name="Overlay_Delete" xml:space="preserve"><value>Elimina</value></data>
+  <data name="Overlay_AddProgram" xml:space="preserve"><value>Programma...</value></data>
+  <data name="Overlay_AddFile" xml:space="preserve"><value>File...</value></data>
+  <data name="Overlay_AddFolder" xml:space="preserve"><value>Cartella...</value></data>
+  <data name="Overlay_BrowseFolder" xml:space="preserve"><value>Seleziona una cartella</value></data>
+  <data name="Overlay_BrowseProgram" xml:space="preserve"><value>Seleziona un programma</value></data>
+  <data name="Overlay_BrowseFile" xml:space="preserve"><value>Seleziona un file</value></data>
+  <data name="Overlay_FilterPrograms" xml:space="preserve"><value>Programmi</value></data>
+  <data name="Overlay_FilterAllFiles" xml:space="preserve"><value>Tutti i file</value></data>
+
+  <data name="Error_Unexpected" xml:space="preserve"><value>Si è verificato un errore imprevisto:</value></data>
+  <data name="Error_UnexpectedTitle" xml:space="preserve"><value>Errore — Corral Manager</value></data>
+  <data name="Error_Fatal" xml:space="preserve"><value>Si è verificato un errore critico. L'applicazione verrà chiusa.</value></data>
+  <data name="Error_FatalTitle" xml:space="preserve"><value>Errore critico — Corral Manager</value></data>
+</root>

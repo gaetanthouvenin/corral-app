@@ -21,9 +21,47 @@ namespace Corral.Desktop.Behaviors;
 /// </summary>
 public static class ReorderItemsBehavior
 {
+  #region Dependencies
+
+  #region Property changed callback
+
+  private static void OnReorderCommandChanged(
+    DependencyObject d,
+    DependencyPropertyChangedEventArgs e)
+  {
+    if (d is not ItemsControl itemsControl)
+    {
+      return;
+    }
+
+    itemsControl.PreviewMouseLeftButtonDown -= OnPreviewMouseLeftButtonDown;
+    itemsControl.PreviewMouseMove -= OnPreviewMouseMove;
+    itemsControl.PreviewDragOver -= OnPreviewDragOver;
+    itemsControl.PreviewDrop -= OnPreviewDrop;
+    itemsControl.DragLeave -= OnDragLeave;
+
+    if (e.NewValue is ICommand)
+    {
+      itemsControl.AllowDrop = true;
+      itemsControl.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
+      itemsControl.PreviewMouseMove += OnPreviewMouseMove;
+      itemsControl.PreviewDragOver += OnPreviewDragOver;
+      itemsControl.PreviewDrop += OnPreviewDrop;
+      itemsControl.DragLeave += OnDragLeave;
+    }
+  }
+
+  #endregion
+
+  #endregion
+
+  #region Fields
+
   #region Constants
 
   private const string DraggedItemDataFormat = "Corral.Desktop.DraggedFenceItem";
+
+  #endregion
 
   #endregion
 
@@ -129,34 +167,6 @@ public static class ReorderItemsBehavior
 
   #endregion
 
-  #region Property changed callback
-
-  private static void OnReorderCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-  {
-    if (d is not ItemsControl itemsControl)
-    {
-      return;
-    }
-
-    itemsControl.PreviewMouseLeftButtonDown -= OnPreviewMouseLeftButtonDown;
-    itemsControl.PreviewMouseMove -= OnPreviewMouseMove;
-    itemsControl.PreviewDragOver -= OnPreviewDragOver;
-    itemsControl.PreviewDrop -= OnPreviewDrop;
-    itemsControl.DragLeave -= OnDragLeave;
-
-    if (e.NewValue is ICommand)
-    {
-      itemsControl.AllowDrop = true;
-      itemsControl.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
-      itemsControl.PreviewMouseMove += OnPreviewMouseMove;
-      itemsControl.PreviewDragOver += OnPreviewDragOver;
-      itemsControl.PreviewDrop += OnPreviewDrop;
-      itemsControl.DragLeave += OnDragLeave;
-    }
-  }
-
-  #endregion
-
   #region Event handlers
 
   private static void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -168,7 +178,9 @@ public static class ReorderItemsBehavior
 
     itemsControl.SetValue(DragStartPointProperty, e.GetPosition(itemsControl));
 
-    var container = itemsControl.ContainerFromElement((DependencyObject)e.OriginalSource) as FrameworkElement;
+    var container =
+      itemsControl.ContainerFromElement((DependencyObject)e.OriginalSource) as FrameworkElement;
+
     itemsControl.SetValue(DraggedItemProperty, container != null ? container.DataContext : null);
   }
 
@@ -188,8 +200,8 @@ public static class ReorderItemsBehavior
     var startPoint = (Point)itemsControl.GetValue(DragStartPointProperty);
     var currentPoint = e.GetPosition(itemsControl);
 
-    if (Math.Abs(currentPoint.X - startPoint.X) < SystemParameters.MinimumHorizontalDragDistance &&
-        Math.Abs(currentPoint.Y - startPoint.Y) < SystemParameters.MinimumVerticalDragDistance)
+    if (Math.Abs(currentPoint.X - startPoint.X) < SystemParameters.MinimumHorizontalDragDistance
+        && Math.Abs(currentPoint.Y - startPoint.Y) < SystemParameters.MinimumVerticalDragDistance)
     {
       return;
     }
@@ -210,7 +222,8 @@ public static class ReorderItemsBehavior
       if (sender is ItemsControl itemsControl)
       {
         var prev = (FrameworkElement)itemsControl.GetValue(CurrentDropContainerProperty);
-        var container = itemsControl.ContainerFromElement((DependencyObject)e.OriginalSource) as FrameworkElement;
+        var container =
+          itemsControl.ContainerFromElement((DependencyObject)e.OriginalSource) as FrameworkElement;
 
         if (prev != null && prev != container)
         {
@@ -272,7 +285,9 @@ public static class ReorderItemsBehavior
       return;
     }
 
-    var targetContainer = itemsControl.ContainerFromElement((DependencyObject)e.OriginalSource) as FrameworkElement;
+    var targetContainer =
+      itemsControl.ContainerFromElement((DependencyObject)e.OriginalSource) as FrameworkElement;
+
     var targetItem = targetContainer != null ? targetContainer.DataContext : null;
 
     var command = GetReorderCommand(itemsControl);

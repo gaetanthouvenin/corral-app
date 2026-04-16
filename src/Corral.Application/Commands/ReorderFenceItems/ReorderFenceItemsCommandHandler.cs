@@ -6,7 +6,6 @@
 
 using Corral.Domain.Aggregates;
 using Corral.Domain.Contracts.UnitOfWork;
-using Corral.Domain.ValueObjects;
 
 using MediatR;
 

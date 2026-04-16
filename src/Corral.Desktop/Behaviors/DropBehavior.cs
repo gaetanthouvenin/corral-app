@@ -169,7 +169,6 @@ public static class DropBehavior
       }
 
       e.Handled = true;
-      return;
     }
   }
 
